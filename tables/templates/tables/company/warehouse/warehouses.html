@@ -1,0 +1,95 @@
+{% extends "tables/base.html" %}
+
+{% block title %}Склады компании "{{company.name}}"{% endblock title %}
+
+{% block page_header %}Склады{% endblock page_header %}
+{% block page_subheader %}"{{company.name}}"{% endblock page_subheader %}
+
+{% block main %}
+    <div class="warehouses-page">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="js-warehouse-create" data-url="{% url 'tables:warehouse-create' company.pk %}">
+                      <div >
+                        <i class="fa fa-plus"></i>
+                        <div>Добавить склад</div>
+                      </div><!-- /.box-body -->
+                    </div><!-- /.box -->
+                </div>
+                <div class="warehouses-list">
+                    {% include "tables/company/warehouse/warehouses_list.html" %}
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modal-warehouse" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                
+            </div>
+        </div>
+    </div>
+{% endblock main %}
+
+{% block custom_js %}
+<script>
+    $(function(){
+
+      // Functions //
+
+      var loadForm = function() {
+        var btn = $(this);
+        console.log(btn.attr('data-url'))
+        $.ajax({
+          url: btn.attr('data-url'),
+          type: 'get',
+          dataType: 'json',
+          beforeSend: function(){
+            $('#modal-warehouse').modal('show');
+          },
+          success: function(data) {
+            $('#modal-warehouse .modal-content').html(data.html_form)
+          }
+        });
+      };
+
+      var saveForm = function(){
+        var form = $(this);
+        $.ajax({
+          url: form.attr('action'),
+          data: form.serialize(),
+          type: form.attr('method'),
+          dataType: 'json',
+          success: function(data) {
+            if (data.form_is_valid) {
+              $('.warehouses-list').html(data.warehouses_list);
+              $('.warehouses-counter').html(data.warehouses_list_count);
+              $('#modal-warehouse').modal('hide');
+            }
+            else {
+              $('#modal-warehouse .modal-content').html(data.html_form)
+            }
+          }
+        });
+        return false;
+      };
+
+      // Binding //
+
+      //Create product
+      $('.js-warehouse-create').click(loadForm);
+      $('#modal-warehouse').on('submit', '.js-warehouse-create-form', saveForm);
+
+      //Edit product
+      $('.warehouses-list').on('click', '.js-warehouse-edit', loadForm);
+      $('#modal-warehouse').on('submit', '.js-warehouse-edit-form', saveForm);
+
+      //Delete product
+      $('.warehouses-list').on('click', '.js-warehouse-delete', loadForm);
+      $('#modal-warehouse').on('submit', '.js-warehouse-delete-form', saveForm);
+
+    });
+</script>
+{% endblock custom_js %}

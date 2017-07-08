@@ -1,0 +1,20 @@
+{% extends "tables/base.html" %}
+
+{% block title %}Создать компанию{% endblock title %}
+
+{% block page_header %}Создать компанию{% endblock page_header %}
+
+{% block main %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="box">
+                    <div class="box-body">
+                        {% include "tables/company/company_create_form.html" %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+{% endblock main %}

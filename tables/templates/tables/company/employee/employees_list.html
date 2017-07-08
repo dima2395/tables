@@ -1,0 +1,32 @@
+{% for employee in employees %}
+    <div class="col-lg-3">
+        <div class="box box-success employee">
+            <div class="box-body">
+                
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="icon text-right">
+                                <i class="fa fa-user"></i>
+                            </div>
+                        </div>
+                        <div class="col-lg-9">
+                            <div class="info">
+                                <div class="name">
+                                    {{ employee.get_full_name}} <span>({{ employee.username}})</span>
+                                </div>
+                                <div class="email">
+                                    <i class="fa fa-envelope-o"></i> <a href="mailto:{{ employee.email}}">{{ employee.email}}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                
+            </div><!-- /.box-body -->
+            <div class="box-footer">
+                <button class="btn btn-warning js-employee-edit" data-url="{% url 'tables:employee-edit' company.pk employee.pk %}">Изменить</button>
+                <button class="btn btn-danger pull-right js-employee-delete" data-url="{% url 'tables:employee-delete' company.pk employee.pk %}">Удалить</button>
+            </div>
+        </div><!-- /.box -->
+    </div>
+{% endfor %}

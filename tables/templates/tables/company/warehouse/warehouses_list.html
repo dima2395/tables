@@ -1,0 +1,25 @@
+{% for warehouse in warehouses %}
+    <div class="col-lg-3">
+        <div class="box box-success warehouse">
+            <div class="box-header with-border">
+                <h2 class="box-title"><b>"{{ warehouse.name }}"</b></h2>
+                <div class="box-tool pull-right">
+                    <a href="{% url 'tables:products' warehouse.company.pk warehouse.pk %}" class="btn btn-primary">Товары ({{ warehouse.product_set.count }})</a>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="icon">
+                    <i class="fa fa-archive"></i>
+                </div>
+                <div class="address">
+                    <i class="fa fa-map-marker"></i> <i>{{ warehouse.address|default:"Адрес не указан" }}</i>
+                </div>
+                
+            </div><!-- /.box-body -->
+            <div class="box-footer">
+                <button class="btn btn-warning pull-left js-warehouse-edit" data-url="{% url 'tables:warehouse-edit' warehouse.company.pk warehouse.pk %}">Изменить</button>
+                <button class="btn btn-danger pull-right js-warehouse-delete" data-url="{% url 'tables:warehouse-delete' warehouse.company.pk warehouse.pk %}">Удалить</button>
+            </div>
+        </div><!-- /.box -->
+    </div>
+{% endfor %}

@@ -1,0 +1,147 @@
+{% extends "tables/base.html" %}
+{% load static %}
+
+{% block title %}Товары на складе "{{warehouse.name}}" компании "{{company.name}}"{% endblock title %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'tables/css/dataTables.bootstrap.css'%}">
+{% endblock css %}
+
+{% block page_header %}Товары{% endblock page_header %}
+{% block page_subheader %}"{{company.name}}"{% endblock page_subheader %}
+
+{% block main %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">Склад "{{ warehouse.name }}"</h3>
+                <button type="button" class="btn btn-primary js-create-product" data-url="{% url 'tables:product-create' company.pk warehouse.pk %}">
+                  <span class="fa fa-plus"></span>
+                  Добавить товар
+                </button>
+            </div>
+            <div class="box-body scrollbar-inner table-responsive">
+                <div class="col-xs-12">
+                    <table id="products-table" class="table table-striped table-bordered table-hover" data-ajax-source="{% url 'tables:products-json' company.pk warehouse.pk %}">
+                        <thead>
+                            <th>Действия</th>
+                            <th>Название</th>
+                            <th>Штрихкод</th>
+                            <th>Артикул</th>
+                            <th>Цена продажи</th>
+                            <th>Себестоимость</th>
+                            <th>Цена закупки</th>
+                            <th>Скидка</th>
+                            <th>Кол-во</th>
+                            <th>Описание</th>
+                        </thead>
+                        <tbody>
+                        {# {% include "tables/product/products_list.html" %} #}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-product">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    </div>
+  </div>
+</div>
+
+
+{% endblock main %}
+
+{% block js %}
+    <script src="{% static 'tables/js/jquery.dataTables.min.js'%}"></script>
+    <script src="{% static 'tables/js/dataTables.bootstrap.min.js'%}"></script>
+{% endblock js %}
+
+{% block custom_js %}
+<script>
+    $(function(){
+
+      //datable(products-table)
+      $('#products-table').DataTable({
+            // data: JSON.parse('{{products|safe}}'),
+            ajaxSource: '/json/products',
+            columns: [
+              {data: 'actions'},
+              {data: 'name'},
+              {data: 'barcode'},
+              {data: 'vendor_code'},
+              {data: 'selling_price'},
+              {data: 'cost_price'},
+              {data: 'purchase_price'},
+              {data: 'discount'},
+              {data: 'quantity'},
+              {data: 'description'},
+            ],
+            order: [],
+            columnDefs: [
+                {"orderable": false, "targets": [0]},
+            ]
+      });
+
+      // Functions //
+
+      var loadForm = function() {
+        var btn = $(this);
+        $.ajax({
+          url: btn.attr('data-url'),
+          type: 'get',
+          dataType: 'json',
+          beforeSend: function(){
+            $('#modal-product').modal('show');
+          },
+          success: function(data) {
+            $('#modal-product .modal-content').html(data.html_form)
+          }
+        });
+      };
+
+      var saveForm = function(){
+        var form = $(this);
+        $.ajax({
+          url: form.attr('action'),
+          data: form.serialize(),
+          type: form.attr('method'),
+          dataType: 'json',
+          success: function(data) {
+            if (data.form_is_valid) {
+              $('#products-table').dataTable().fnClearTable();
+              if (data.products_list.length) {
+                $('#products-table').dataTable().fnAddData(data.products_list);
+              }
+              
+              $('#modal-product').modal('hide');
+            }
+            else {
+              $('#modal-product .modal-content').html(data.html_form)
+            }
+          }
+        });
+        return false;
+      };
+
+      // Binding //
+
+      //Create product
+      $('.js-create-product').click(loadForm);
+      $('#modal-product').on('submit', '.js-product-create-form', saveForm);
+
+      //Edit product
+      $('#products-table').on('click', '.js-edit-product', loadForm);
+      $('#modal-product').on('submit', '.js-product-edit-form', saveForm);
+
+      //Delete product
+      $('#products-table').on('click', '.js-delete-product', loadForm);
+      $('#modal-product').on('submit', '.js-product-delete-form', saveForm);
+
+    });
+</script>
+{% endblock custom_js %}

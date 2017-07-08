@@ -1,0 +1,39 @@
+{% extends "tables/base.html" %}
+
+{% block title %}Редактирование компании "{{company.name}}"{% endblock title %}
+
+{% block page_header %}Компания - {{company.name}}{% endblock page_header %}
+
+{% block main %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="box">
+                    <div class="box-body">
+                        {% include "tables/company/company_edit_form.html" %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="company-delete" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form action="{% url 'tables:company-delete' company.pk %}" method="post">
+                    <div class="modal-header">
+                        
+                    </div>
+                    <div class="modal-body">
+                        
+                        {% csrf_token %}
+                        <p class="lead">Вы уверены что хотите удалить компанию <strong>"{{ company.name }}"</strong>?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-danger" type="submit">Удалить</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock main %}

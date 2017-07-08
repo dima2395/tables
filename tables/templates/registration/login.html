@@ -1,0 +1,60 @@
+{% extends "tables/base.html" %}
+
+{% block title %}Вход{% endblock title %}
+
+{% block page_header %}Вход{% endblock page_header %}
+
+{% block main %}
+    <div class="signin-page">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-5">
+                    <div class="box box-success">
+                        <div class="box-header">
+                            <h2 class="box-title">Форма входа</h2>
+                        </div>
+                        <div class="box-body">
+                            <form action="." method="post" id="login-form">
+                                {% include "tables/partials/messages.html" %}
+                                {% include "tables/partials/form_template.html" %}
+                                {% csrf_token %}
+                                <input type="hidden" name="next" value="{{ next }}">
+                                <button class="btn btn-success" type="submit">Вход</button>
+                            </form>
+                            <div class="links">
+                                {# <p>Forgot password <a href="{% url 'password_reset' %}">Reset it</a>!</p> #}
+                                <p>Не зарегистрированы? <a href="{% url 'accounts:signup' %}">Регистрация</a>!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block custom_js %}
+  <script>
+      $.fn.simulateClick = function() {
+        return this.each(function() {
+            if('createEvent' in document) {
+                var doc = this.ownerDocument,
+                    evt = doc.createEvent('MouseEvents');
+                evt.initMouseEvent('click', true, true, doc.defaultView, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
+                this.dispatchEvent(evt);
+            } else {
+                this.click(); // IE
+            }
+        });
+    }
+
+    $(document).ready(function(){
+      $('[name="username"]').on("change.autofill", function () {
+        $('[for="id_password"]').addClass("active");
+      }).click(function() {
+          $(this).unbind("change.autofill");
+      });
+    });
+  </script>
+{% endblock custom_js %}

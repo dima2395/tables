@@ -1,0 +1,54 @@
+<!-- Left side column. contains the logo and sidebar -->
+{% load static %}
+<aside class="main-sidebar">
+
+  <!-- sidebar: style can be found in sidebar.less -->
+  <section class="sidebar">
+
+    <!-- Sidebar Menu -->
+    <ul class="sidebar-menu">
+      {% if user.profile.is_owner %}
+        <li class="add-new-company"><a href="{% url 'tables:company-create' %}"><i class="fa fa-plus"></i><span>Добавить компанию</span></a></li>
+      {% endif %}
+          {% if user.profile.get_companies.count %}
+            <li class="header">Компании</li>
+            {% for company in user.profile.get_companies %}
+                {# used for setting active menu item #}
+                {% url 'tables:company' company.pk as active_url %}
+                <li class="treeview {% if active_url in request.path %}
+                  active
+                {% endif %}">
+                  <a href=""><i class="fa fa-home"></i><span>{{company.name}}</span>
+                    <span class="pull-right-container">
+                      <i class="fa fa-caret-down pull-right"></i>
+                    </span>
+                  </a>
+                  <ul class="treeview-menu">
+                    <li>
+                      <a href="{% url 'tables:warehouses' company.pk %}">
+                        <i class="fa fa-archive"></i>Склады<span class="label label-primary pull-right warehouses-counter">{{ company.warehouse_set.count }}</span>
+                      </a>
+                    </li>
+                    <li><a href="#"><i class="fa fa-briefcase"></i>Услуги</a></li>
+                    {% if user.profile.is_owner %}
+                      <li>
+                        <a href="{% url 'tables:employees' company.pk %}">
+                          <i class="fa fa-users"></i>Сотрудники<span class="label label-warning pull-right employees-counter">{{ company.employees.count }}</span>
+                        </a>
+                      </li>
+                      <li><a href="{% url 'tables:company-edit' company.pk %}"><i class="fa fa-cog"></i>Настройки</a></li>
+                    {% endif %}
+                  </ul>
+                </li>
+            {% endfor %}
+          {% endif %}
+
+
+      
+
+
+    </ul>
+    <!-- /.sidebar-menu -->
+  </section>
+  <!-- /.sidebar -->
+</aside>
