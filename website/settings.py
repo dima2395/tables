@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'tables.apps.TablesConfig',
     'accounts.apps.AccountsConfig',
     'widget_tweaks',
+    'jquery',
+    'djangoformsetjs',
 ]
 
 MIDDLEWARE = [

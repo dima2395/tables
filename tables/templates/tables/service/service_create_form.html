@@ -1,0 +1,6 @@
+<form action="{% url 'tables:service-create' company.pk %}" method="post">
+    {% include "tables/partials/messages.html" %}
+    {% include "tables/partials/form_template.html" %}
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary">Добавить</button>
+</form>

@@ -1,16 +1,11 @@
-<form method="post" action="{% url 'tables:product-edit' company.pk warehouse.pk form.instance.pk %}" class="js-product-edit-form">
-    {% csrf_token %}
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        <h4 class="modal-title">Изменить товар</h4>
-    </div>
-    <div class="modal-body">
+{% load widget_tweaks %}
+<p>
+    <a href="{% url 'tables:products' company.pk warehouse.pk %}">Вернуться на склад <b>"{{warehouse.name}}"</b></a>
+</p>
+
+<form method="post" action="{% url 'tables:product-edit' company.pk warehouse.pk product.pk %}" class="js-product-create-form">
+        {% csrf_token %}
+        {% include "tables/partials/messages.html" %}
         {% include "tables/partials/form_template.html" %}
-    </div>
-    <div class="modal-footer">
-        <button type="submit" class="btn btn-primary">Изменить</button>
-        <button type="button" data-dismiss="modal" class="btn btn-default">Закрыть</button>
-    </div>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
 </form>

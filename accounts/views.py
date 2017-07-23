@@ -65,3 +65,5 @@ def activate(request, uid64, token):
             return redirect('tables:company-create')
 
 
+
+

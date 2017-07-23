@@ -1,0 +1,19 @@
+{% load widget_tweaks %}
+<div class="lines row form-inline">
+    {{formset.management_form}}
+    {% for form in formset %}
+        <div class="line">
+        {% for field in form.visible_fields %}
+            <div class="form-group has-feedback {% if field.field.required %} required{% endif %}{% if field.errors %} has-error{% endif %}">
+                <div class="inline-field {% if forloop.counter == 1 %}col-lg-8{% else %}col-lg-4{% endif %}">
+                    <label for="{{ field.id_for_label}}">{{ field.label }}</label>
+                    {% render_field field class="form-control"%}
+                    {% for error in field.errors %}
+                        <p class="help-block">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    {% endfor %}
+</div>

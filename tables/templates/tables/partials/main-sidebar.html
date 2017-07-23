@@ -29,7 +29,9 @@
                         <i class="fa fa-archive"></i>Склады<span class="label label-primary pull-right warehouses-counter">{{ company.warehouse_set.count }}</span>
                       </a>
                     </li>
-                    <li><a href="#"><i class="fa fa-briefcase"></i>Услуги</a></li>
+                    <li><a href="{% url 'tables:services' company.pk %}"><i class="fa fa-briefcase"></i>Услуги</a></li>
+                    <li><a href="{% url 'tables:clients' company.pk %}"><i class="fa fa-user"></i>Клиенты</a></li>
+                    <li><a href="{% url 'tables:orders' company.pk %}"><i class="fa fa-usd"></i>Заказы</a></li>
                     {% if user.profile.is_owner %}
                       <li>
                         <a href="{% url 'tables:employees' company.pk %}">

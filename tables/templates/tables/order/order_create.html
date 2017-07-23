@@ -1,0 +1,228 @@
+{% extends "tables/base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load formset_tags %}
+
+{% block title %}Добавить заказ{% endblock title %}
+
+{% block css %}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+{% endblock css %}
+
+{% block page_header %}Добавить заказ{% endblock page_header %}
+{% block page_subheader %}"{{company.name}}"{% endblock page_subheader %}
+
+{% block main %}
+    <div class="order-create-page">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="box">
+                        <div class="box-body">
+                            <form action="{% url 'tables:order-create' company.pk %}" method="post" class="order-form">
+                                {% include "tables/partials/messages.html" %}
+                                {% csrf_token %}
+                                {% with orderForm.client as field %}
+                                    <div class="row">
+                                        <div class="col-lg-12 form-group has-feedback {% if field.field.required %} required{% endif %}{% if field.errors %} has-error{% endif %}">
+                                            <label for="{{ field.id_for_label}}">{{ field.label }}</label>
+                                            {% render_field field class="form-control"%}
+                                            {% for error in field.errors %}
+                                                <p class="help-block">{{ error }}</p>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% endwith %}
+                                {% with orderForm.urgency as field %}
+                                    <div class="row">
+                                        <div class="col-lg-12 form-group has-feedback {% if field.field.required %} required{% endif %}{% if field.errors %} has-error{% endif %}">
+                                            <label for="{{ field.id_for_label}}">{{ field.label }}</label>
+                                            {% render_field field class="form-control"%}
+                                            {% for error in field.errors %}
+                                                <p class="help-block">{{ error }}</p>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% endwith %}
+                                <fieldset id="productsFormset" class="products" data-formset-prefix="{{ productsFormset.prefix }}">
+                                    <legend>Товары</legend>
+                                    <div class="formset-body" data-formset-body>
+                                        {{ productsFormset.management_form }}
+                                        {% for form in productsFormset %}
+                                            <div class="row row-form" data-formset-form>
+                                                <div class="form-group col-xs-7 {% if form.product.field.required %} required{% endif %}{% if form.product.errors %} has-error{% endif %}">
+                                                    <label for="{{form.product.id_for_label}}">{{form.product.label}}</label>
+                                                    {% render_field form.product class="form-control"%}
+                                                    {% for error in form.product.errors %}
+                                                        <p class="help-block">{{ error }}</p>
+                                                    {% endfor %}
+                                                </div>
+                                                <div class="form-group col-xs-3 {% if form.quantity.field.required %} required{% endif %}{% if form.quantity.errors %} has-error{% endif %}">
+                                                    <label for="{{form.quantity.id_for_label}}">{{form.quantity.label}}</label>
+                                                    {% render_field form.quantity class="form-control"%}
+                                                    {% for error in form.quantity.errors %}
+                                                        <p class="help-block">{{ error }}</p>
+                                                    {% endfor %}
+                                                </div>
+                                                <div class="col-xs-2">
+                                                    <div class="hidden">{{ form.DELETE }}</div>
+                                                    <button type="button" class="btn btn-xs btn-danger delete-button" data-formset-delete-button>Удалить</button>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    <script type="form-template" data-formset-empty-form>
+                                        {% escapescript %}
+                                            {% with productsFormset.empty_form as form %}
+                                            <div class="row row-form" data-formset-form>
+                                                <div class="form-group col-xs-7 {% if form.product.field.required %} required{% endif %}{% if form.product.errors %} has-error{% endif %}">
+                                                    <label for="{{form.product.id_for_label}}">{{form.product.label}}</label>
+                                                    {% render_field form.product class="form-control"%}
+                                                    {% for error in form.product.errors %}
+                                                        <p class="help-block">{{ error }}</p>
+                                                    {% endfor %}
+                                                </div>
+                                                <div class="form-group col-xs-3 {% if form.quantity.field.required %} required{% endif %}{% if form.quantity.errors %} has-error{% endif %}">
+                                                    <label for="{{form.quantity.id_for_label}}">{{form.quantity.label}}</label>
+                                                    {% render_field form.quantity class="form-control"%}
+                                                    {% for error in form.quantity.errors %}
+                                                        <p class="help-block">{{ error }}</p>
+                                                    {% endfor %}
+                                                </div>
+                                                <div class="col-xs-2">
+                                                    <div class="hidden">{{ form.DELETE }}</div>
+                                                    <button type="button" class="btn btn-xs btn-danger delete-button" data-formset-delete-button>Удалить</button>
+                                                </div>
+                                            </div>
+                                            {% endwith %}
+                                        {% endescapescript %}
+                                    </script>
+                                    <input type="button" class="btn btn-success btn-xs" value="+ Добавить товар" data-formset-add>
+                                </fieldset>
+                                <fieldset id="servicesFormset" class="products" data-formset-prefix="{{ servicesFormset.prefix }}">
+                                    <legend>Услуги</legend>
+                                    <div class="formset-body" data-formset-body>
+                                        {{ servicesFormset.management_form }}
+                                        {% for form in servicesFormset %}
+                                            <div class="row row-form" data-formset-form>
+                                                <div class="form-group col-xs-10 {% if form.service.field.required %} required{% endif %}{% if form.service.errors %} has-error{% endif %}">
+                                                    <label for="{{form.service.id_for_label}}">{{form.service.label}}</label>
+                                                    {% render_field form.service class="form-control"%}
+                                                    {% for error in form.service.errors %}
+                                                        <p class="help-block">{{ error }}</p>
+                                                    {% endfor %}
+                                                </div>
+                                                <div class="col-xs-2">
+                                                    <div class="hidden">{{ form.DELETE }}</div>
+                                                    <button type="button" class="btn btn-xs btn-danger delete-button" data-formset-delete-button>Удалить</button>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    <script type="form-template" data-formset-empty-form>
+                                        {% escapescript %}
+                                            {% with servicesFormset.empty_form as form %}
+                                            <div class="row row-form" data-formset-form>
+                                                <div class="form-group col-xs-10 {% if form.service.field.required %} required{% endif %}{% if form.service.errors %} has-error{% endif %}">
+                                                    <label for="{{form.service.id_for_label}}">{{form.service.label}}</label>
+                                                    {% render_field form.service class="form-control"%}
+                                                    {% for error in form.service.errors %}
+                                                        <p class="help-block">{{ error }}</p>
+                                                    {% endfor %}
+                                                </div>
+                                                <div class="col-xs-2">
+                                                    <div class="hidden">{{ form.DELETE }}</div>
+                                                    <button type="button" class="btn btn-xs btn-danger delete-button" data-formset-delete-button>Удалить</button>
+                                                </div>
+                                            </div>
+                                            {% endwith %}
+                                        {% endescapescript %}
+                                    </script>
+                                    <input type="button" class="btn btn-success btn-xs" value="+ Добавить услугу" data-formset-add>
+                                </fieldset>
+                                {% with orderForm.comment as field %}
+                                    <div class="row">
+                                        <div class="col-lg-12 form-group has-feedback {% if field.field.required %} required{% endif %}{% if field.errors %} has-error{% endif %}">
+                                            <label for="{{ field.id_for_label}}">{{ field.label }}</label>
+                                            {% render_field field class="form-control"%}
+                                            {% for error in field.errors %}
+                                                <p class="help-block">{{ error }}</p>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% endwith %}
+                                <button type="submit" class="btn btn-primary">Создать</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock main %}
+
+{% block js %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+    <script src="{% static 'js/jquery.formset.js'%}"></script>
+{% endblock js %}}
+
+{% block custom_js %}
+    <script>
+        $(function(){
+            
+            $('select#id_client').select2();
+
+
+
+            //delete initial form
+            // $($('.lines .line')[0]).remove();
+            // $('#id_form-TOTAL_FORMS').attr('value', 0);
+            
+
+
+            var target = document.getElementsByClassName('formset-body')[0];
+            if (target) {
+                var observer = new MutationObserver(function(mutations) {
+                    mutations.forEach(function(mutation){
+                        if (mutation && mutation.addedNodes) {
+                            mutation.addedNodes.forEach(function(elm) {
+                                if (elm !== undefined && $(elm).hasClass('row-form')) {
+                                    var select = elm.children[0].children[1];
+                                    if (select.nodeName === 'SELECT') {
+
+                                        $(select).select2();
+                                    }
+                                }
+                            });
+                        }
+                    });
+                });
+
+                observer.observe(target, {
+                    childList: true,
+                })
+            }
+
+            $("#productsFormset").formset({
+                animateForms: true
+            });
+
+            $("#servicesFormset").formset({
+                animateForms: true
+            });
+
+            //trigger mutation for mutationObserver to initialize select2
+            // var fline = $('.lines .line').clone();
+            // $('.lines .line').remove();
+            // $('.lines').prepend(fline)
+
+            // $('.lines .line').formset({
+            //     addText: '+ Добавить',
+            //     deleteText: 'Удалить'
+            // });
+
+
+        });
+
+    </script>
+{% endblock custom_js %}
