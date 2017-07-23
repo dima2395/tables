@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect
 from django.contrib import messages
+from django.urls import reverse
 from ..models import Company
 from ..forms import CompanyForm
 
