@@ -5,7 +5,16 @@
     color: white;
     opacity: 0.8; }
 
-#products-table .js-edit-product {
+.dataTable-box .box-title {
+  margin-right: 10px; }
+
+.dataTable thead tr .row-select {
+  padding: 9px;
+  width: 15px !important; }
+.dataTable thead tr .row-actions {
+  width: 80px !important;
+  padding-right: 5px; }
+.dataTable tbody .js-edit-row {
   margin-right: 10px; }
 
 .warehouses-page .js-warehouse-create {
@@ -71,6 +80,13 @@
       .employees-page .employee .box-body .info .email i {
         color: #8a8a8a; }
 
+.orders-page #orders-table tbody tr.urgently {
+  background-color: #ffe2e2; }
+  .orders-page #orders-table tbody tr.urgently:hover {
+    background-color: #f9cccc; }
+.orders-page #orders-table tbody tr.usually {
+  background-color: #c4ffc4; }
+
 .modal-body {
   max-height: calc(100vh - 200px);
   overflow-y: auto; }
@@ -89,6 +105,27 @@
 .form-group.required label:after {
   content: " *";
   color: red; }
+
+.order-create-page .order-form fieldset, .order-edit-page .order-form fieldset {
+  border: 1px solid #9e9e9e;
+  padding: 10px 15px;
+  margin-bottom: 10px; }
+  .order-create-page .order-form fieldset .delete-button, .order-edit-page .order-form fieldset .delete-button {
+    margin-top: 31px; }
+  .order-create-page .order-form fieldset legend, .order-edit-page .order-form fieldset legend {
+    display: inline;
+    width: auto;
+    margin: 0;
+    padding: 0 5px;
+    border: 0px; }
+  .order-create-page .order-form fieldset .form-group, .order-edit-page .order-form fieldset .form-group {
+    margin-bottom: 10px; }
+.order-create-page .orders-list > li > span, .order-edit-page .orders-list > li > span {
+  font-weight: bold; }
+  .order-create-page .orders-list > li > span.urgently, .order-edit-page .orders-list > li > span.urgently {
+    color: red; }
+  .order-create-page .orders-list > li > span.usually, .order-edit-page .orders-list > li > span.usually {
+    color: green; }
 
 .navbar-nav > .user-menu .user-image {
   width: 25px;
