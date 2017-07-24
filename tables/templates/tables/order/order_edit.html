@@ -44,6 +44,46 @@
                                         </div>
                                     </div>
                                 {% endwith %}
+                                
+                                <fieldset class="state">
+                                    <legend>Состояние сделки</legend>
+                                    {% with orderForm.status as field %}
+                                        <div class="row">
+                                            <div class="col-lg-12 form-group has-feedback {% if field.field.required %} required{% endif %}{% if field.errors %} has-error{% endif %}">
+                                                <label for="{{ field.id_for_label}}">{{ field.label }}</label>
+                                                {% render_field field class="form-control"%}
+                                                {% for error in field.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    {% endwith %}
+
+                                    
+                                    <div class="row confirmations">
+                                        {% with orderForm.warehouse_confirmed as field %}
+                                            <div class="col-lg-2 has-feedback {% if field.field.required %} required{% endif %}{% if field.errors %} has-error{% endif %}">
+                                                <label for="{{ field.id_for_label}}">{% render_field field %} <span>{{ field.label }}</span></label>
+                                                
+                                                {% for error in field.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                {% endfor %}
+                                            </div>
+                                        {% endwith %}
+
+                                        {% with orderForm.bookkeeping_confirmed as field %}
+                                            <div class="col-lg-10 has-feedback {% if field.field.required %} required{% endif %}{% if field.errors %} has-error{% endif %}">
+                                                <label for="{{ field.id_for_label}}">{% render_field field %} <span>{{ field.label }}</span></label>
+                                                
+                                                {% for error in field.errors %}
+                                                    <p class="help-block">{{ error }}</p>
+                                                {% endfor %}
+                                            </div>
+                                        {% endwith %}
+                                    </div>
+                                    
+                                </fieldset>
+
                                 <fieldset id="productsFormset" class="products" data-formset-prefix="{{ productsFormset.prefix }}">
                                     <legend>Товары</legend>
                                     <div class="formset-body" data-formset-body>

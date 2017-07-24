@@ -84,6 +84,10 @@
   width: 70px !important; }
 .orders-page #orders-table thead .row-created-at {
   width: 105px !important; }
+.orders-page #orders-table thead .row-confirmation {
+  width: 35px !important; }
+.orders-page #orders-table thead .row-status {
+  width: 50px !important; }
 .orders-page #orders-table tbody tr.urgently {
   background-color: #ffe2e2; }
   .orders-page #orders-table tbody tr.urgently:hover {
@@ -114,6 +118,12 @@
   border: 1px solid #9e9e9e;
   padding: 10px 15px;
   margin-bottom: 10px; }
+  .order-create-page .order-form fieldset.state .confirmations, .order-edit-page .order-form fieldset.state .confirmations {
+    margin-top: 10px; }
+  .order-create-page .order-form fieldset.state label span, .order-edit-page .order-form fieldset.state label span {
+    display: inline-block;
+    padding-top: 10px;
+    padding-left: 4px; }
   .order-create-page .order-form fieldset .delete-button, .order-edit-page .order-form fieldset .delete-button {
     margin-top: 31px; }
   .order-create-page .order-form fieldset legend, .order-edit-page .order-form fieldset legend {

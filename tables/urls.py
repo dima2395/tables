@@ -60,8 +60,12 @@ urlpatterns = [
     url(r'company/(?P<company_pk>[0-9]+)/order/create/$', order.order_create, name='order-create'),
     url(r'company/(?P<company_pk>[0-9]+)/order/(?P<order_pk>[0-9]+)/edit/$', order.order_edit, name='order-edit'),
     url(r'company/(?P<company_pk>[0-9]+)/order/(?P<order_pk>[0-9]+)/delete/$', order.order_delete, name='order-delete'),
-    url(r'company/(?P<company_pk>[0-9]+)/orders/$', order.orders, name='orders'),
     url(r'company/(?P<company_pk>[0-9]+)/orders/delete/$', order.orders_delete, name='orders-delete'),
+    url(r'company/(?P<company_pk>[0-9]+)/orders/$', order.orders, name='orders'),
     url(r'company/(?P<company_pk>[0-9]+)/orders/json/$', order.orders_json, name='orders-json'),
+    url(r'company/(?P<company_pk>[0-9]+)/orders/processing/$', order.orders_processing, name='orders-processing'),
+    url(r'company/(?P<company_pk>[0-9]+)/orders/json/processing/$', order.orders_processing_json, name='orders-processing-json'),
+    url(r'company/(?P<company_pk>[0-9]+)/orders/completed/$', order.orders_completed, name='orders-completed'),
+    url(r'company/(?P<company_pk>[0-9]+)/orders/json/completed/$', order.orders_completed_json, name='orders-completed-json'),
 
 ]

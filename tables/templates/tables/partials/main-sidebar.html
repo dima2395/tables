@@ -31,7 +31,15 @@
                     </li>
                     <li><a href="{% url 'tables:services' company.pk %}"><i class="fa fa-briefcase"></i>Услуги</a></li>
                     <li><a href="{% url 'tables:clients' company.pk %}"><i class="fa fa-user"></i>Клиенты</a></li>
-                    <li><a href="{% url 'tables:orders' company.pk %}"><i class="fa fa-usd"></i>Заказы</a></li>
+                    <li class="treeview active">
+                      <a href="#"><i class="fa fa-usd"></i>Заказы <i class="fa fa-caret-down"></i>
+                      </a>
+                      <ul class="treeview-menu">
+                        <li><a href="{% url 'tables:orders-processing' company.pk %}"><i class="fa fa-circle" aria-hidden="true"></i>В процессе</a></li>
+                        <li><a href="{% url 'tables:orders-completed' company.pk %}"><i class="fa fa-circle" aria-hidden="true"></i>Завершенные</a></li>
+                        <li><a href="{% url 'tables:orders' company.pk %}"><i class="fa fa-circle" aria-hidden="true"></i>Все</a></li>
+                      </ul>
+                    </li>
                     {% if user.profile.is_owner %}
                       <li>
                         <a href="{% url 'tables:employees' company.pk %}">

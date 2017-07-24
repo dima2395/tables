@@ -125,7 +125,6 @@ def product_delete(request, company_pk, warehouse_pk, product_pk):
         if request.method == 'POST':
             product.delete()
             data['form_is_valid'] = True
-            data['products_list'] = products_list(request, company_pk, warehouse_pk)
         else:
             context = {'product': product, 'company': company, 'warehouse': warehouse}
             data['html_form'] = render_to_string('tables/product/product_delete_form.html', context, request=request)

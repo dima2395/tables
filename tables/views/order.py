@@ -162,7 +162,6 @@ def order_delete(request, company_pk, order_pk):
     if request.method == 'POST':
         order.delete()
         data['form_is_valid'] = True
-        data['orders_list'] = orders_list(request, company_pk)
     else:
         context = {
             'order': order,
@@ -188,20 +187,27 @@ def orders_delete(request, company_pk):
                 cleaned_ids.append(number)
             except:
                 return HttpResponseForbidden()
+
         Order.objects.filter(pk__in=cleaned_ids, company=company).delete()
         data['form_is_valid'] = True
-        data['orders_list'] = orders_list(request, company_pk)
     return JsonResponse(data)
 
 
 
 @login_required
-def orders_list(request, company_pk):
+def orders_list(request, company_pk, filtered='all'):
     company = get_object_or_404(Company, pk=company_pk)
     user = request.user
-    orders = Order.objects.filter(company=company).order_by('-created_at')
     result = []
-    print("\n\n\nLanguage:\n\n\n",request.LANGUAGE_CODE)
+    print("\n\n\Filtered:", filtered)
+
+    if filtered == 'all':
+        orders = Order.objects.filter(company=company).order_by('-created_at')
+    elif filtered == 'processing':
+        orders = Order.objects.filter(company=company, status='processing').order_by('-created_at')
+    elif filtered == 'completed':
+        orders = Order.objects.filter(company=company, status='completed').order_by('-created_at')
+
 
     for order in orders:
         
@@ -236,9 +242,21 @@ def orders_list(request, company_pk):
             'comment': order.comment,
             'products': products,
             'services': services,
+            'status': {
+                'label': order.get_status_display(),
+                'value': order.status,
+            },
+            'confirmations': {
+                'warehouse': order.warehouse_confirmed,
+                'bookkeeping': order.bookkeeping_confirmed
+            },
             'actions': {
                 'edit': reverse('tables:order-edit', kwargs={'company_pk': company.pk, 'order_pk':order.pk}),
                 'delete': reverse('tables:order-delete', kwargs={'company_pk': company.pk, 'order_pk':order.pk}),
+            },
+            'agent': {
+                'full_name': order.created_by.get_full_name(),
+                'username': order.created_by.username
             }
         })
 
@@ -256,3 +274,29 @@ def orders(request, company_pk):
     user = request.user
 
     return render(request, 'tables/order/orders.html', {'company': company})
+
+
+@login_required
+def orders_processing(request, company_pk):
+    company = get_object_or_404(Company, pk=company_pk)
+    user = request.user
+
+    return render(request, 'tables/order/orders_processing.html', {'company': company})
+
+@login_required
+def orders_processing_json(request, company_pk):
+    
+    return JsonResponse({'data':orders_list(request, company_pk, filtered='processing')}, safe=False)
+
+
+@login_required
+def orders_completed(request, company_pk):
+    company = get_object_or_404(Company, pk=company_pk)
+    user = request.user
+
+    return render(request, 'tables/order/orders_completed.html', {'company': company})
+
+@login_required
+def orders_completed_json(request, company_pk):
+    
+    return JsonResponse({'data':orders_list(request, company_pk, filtered='completed')}, safe=False)

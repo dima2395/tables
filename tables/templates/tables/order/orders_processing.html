@@ -1,45 +1,51 @@
 {% extends "tables/base.html" %}
 {% load static %}
 
-{% block title %}Усгули компании "{{company.name}}"{% endblock title %}
+{% block title %}Заказы в процессе компании "{{company.name}}"{% endblock title %}
 
 {% block css %}
     <link rel="stylesheet" href="{% static 'tables/css/dataTables.bootstrap.css'%}">
 {% endblock css %}
 
-{% block page_header %}Услуги{% endblock page_header %}
+{% block page_header %}Заказы в процессе{% endblock page_header %}
 {% block page_subheader %}"{{company.name}}"{% endblock page_subheader %}
 
 {% block main %}
-<div class="services-page container-fluid">
+<div class="orders-page container-fluid">
     <div class="row">
         <div class="box dataTable-box">
             <div class="box-header with-border">
-                <h3 class="box-title">Услуги</h3>
-                <a type="button" class="btn btn-primary js-create-service" href="{% url 'tables:service-create' company.pk %}">
+                <h3 class="box-title">Заказы в процессе</h3>
+                <a type="button" class="btn btn-primary js-create-row" href="{% url 'tables:order-create' company.pk %}">
                   <span class="fa fa-plus"></span>
-                  Добавить услугу
+                  Добавить заказ
                 </a>
-                <button type="button" class="btn btn-default disabled js-delete-selected" data-url="{% url 'tables:services-delete' company.pk %}" data-csrf="{{csrf_token}}">
+                <button type="button" class="btn btn-default disabled js-delete-selected" data-url="{% url 'tables:orders-delete' company.pk %}" data-csrf="{{csrf_token}}">
                   Удалить выделенные <span>(0)</span>
                 </button>
             </div>
             <div class="box-body scrollbar-inner table-responsive">
                 <div class="col-xs-12">
-                    <table class="dataTable table table-striped table-bordered table-hover" data-ajax-source="">
+                    <table id="orders-table" class="dataTable table table-striped table-bordered table-hover">
                         <thead>
                             <th class="row-select"><input type="checkbox" id="select-all-rows"></th>
                             <th class="row-actions">Действия</th>
-                            <th>Название</th>
-                            <th>Описание</th>
+                            <th>Клиент</th>
+                            <th>Товары</th>
+                            <th>Услуги</th>
+                            <th class="row-urgency">Срочность</th>
+                            <th class="row-confirmation">Склад</th>
+                            <th class="row-confirmation">Бухг.</th>
+                            <th class="row-status">Статус</th>
+                            <th class="row-created-at">Создан</th>
+                            <th>Агент</th>
+                            <th>Комментарий</th>
                         </thead>
                         <tbody>
+                        
                         </tbody>
                     </table>
                 </div>
-            </div>
-            <div class="box-footer">
-              
             </div>
         </div>
     </div>
@@ -55,7 +61,7 @@
 <div class="modal fade" id="modal-entities-delete">
   <div class="modal-dialog">
     <div class="modal-content">
-        {% include "tables/service/services_delete_form.html" %}
+        {% include "tables/order/orders_delete_form.html" %}
     </div>
   </div>
 </div>
@@ -74,8 +80,7 @@
 
       //datable(products-table)
       var table = $('.dataTable').DataTable({
-            ajax: '{% url "tables:services-json" company.pk %}',
-
+            ajaxSource: '{% url "tables:orders-processing-json" company.pk %}',
             columns: [
               {
                 data: 'pk',
@@ -92,8 +97,108 @@
                   return (button_edit + button_delete);
                 }
               },
-              {data: 'name'},
-              {data: 'description'},
+              {data: 'client'},
+              {
+                data: 'products',
+                render: function(products, type, row, meta) {
+                  console.log(meta.row)
+                  var result = "";
+                  for(var i=0; i < products.length; i++) {
+                    var product = products[i];
+                    var p = '<p>'+ (i+1) + ') ' + product.name + ' (' + product.quantity + ' ' + product.unit + ')' + '</p>';
+                    result += p;
+                  }
+                  return result;
+                }
+              },
+              {
+                data: 'services',
+                render: function(services) {
+                  var result = "";
+                  for(var i=0; i < services.length; i++) {
+                    var service = services[i];
+                    var p = '<p>' + (i+1) + ') ' + service.name + '</p>';
+                    result += p;
+                  }
+                  return result;
+                }
+              },
+              {
+                data: 'urgency',
+                render: function(urgency, type, row, meta) {
+
+                  var $label = $('<span/>', {
+                    'class': 'label',
+                    'text': urgency.label,
+                  })
+
+                  if (urgency.value == 'urgently') {
+                    $label.addClass('label-danger')
+                  } else {
+                    $label.addClass('label-success')
+                  }
+                  return $label.prop('outerHTML');
+                }
+              },
+              {
+                data: 'confirmations',
+                render(data) {
+                  var $label = $('<span/>', {
+                    'class': 'label',
+                  })
+                  if (data.warehouse == true) {
+                    $label.addClass('label-success').text('Да')
+                  } else {
+                    $label.addClass('label-danger').text('Нет')
+                  }
+                  return $label.prop('outerHTML');
+                }
+              },
+              {
+                data: 'confirmations',
+                render(data) {
+                  var $label = $('<span/>', {
+                    'class': 'label',
+                  })
+                  if (data.bookkeeping == true) {
+                    $label.addClass('label-success').text('Да')
+                  } else {
+                    $label.addClass('label-danger').text('Нет')
+                  }
+                  return $label.prop('outerHTML');
+                }
+              },
+              {
+                data: 'status',
+                render: function(status, type, row, meta) {
+
+                  var $label = $('<span/>', {
+                    'class': 'label',
+                    'text': status.label,
+                  })
+
+                  if (status.value == 'processing') {
+                    $label.addClass('label-warning')
+                  } else {
+                    $label.addClass('label-success')
+                  }
+                  return $label.prop('outerHTML');
+                }
+              },
+              {
+                data: 'created_at',
+                render(data) {
+                  var hidden = "<span class=\"hidden\">"+ data.date_value +"</span>";
+                  return hidden + data.date_str
+                }
+              },
+              {
+                data: 'agent',
+                render: function(data) {
+                  return data.username
+                }
+              },
+              {data: 'comment'},
             ],
             order: [],
             columnDefs: [
@@ -101,12 +206,9 @@
             ]
       });
 
+
       //put controls into box footer
       $($('.dataTable-box .box-body .row')[2]).appendTo('.dataTable-box .box-footer');
-
-      //put controls into box header
-      // $($('.products-box .box-body .row')[0]).appendTo('.products-box .box-header');
-      // Functions //
 
       var loadForm = function() {
         var btn = $(this);
@@ -133,6 +235,7 @@
           success: function(data) {
             if (data.form_is_valid) {
               table.ajax.reload();
+              
               $('#modal-entity').modal('hide');
             }
             else {
@@ -148,8 +251,10 @@
       $('.dataTable').on('click', '.js-delete-row', loadForm);
       $('#modal-entity').on('submit', '.js-row-delete-form', saveForm);
 
+      
 
-      //multiple delete
+
+            //multiple delete
 
 
       $('#select-all-rows').on('change', function(){
@@ -211,6 +316,7 @@
                   table.ajax.reload();
                   render_delete_button();
                   $('#modal-entities-delete').modal('hide');
+                  
                 }
               }
             });
@@ -218,6 +324,7 @@
           })
         }
     })
+
 
     });
 </script>

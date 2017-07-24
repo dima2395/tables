@@ -65,7 +65,7 @@ class OrderForm(forms.ModelForm):
 
     class Meta:
         model = Order
-        fields = ['client', 'urgency', 'comment']
+        fields = ['client', 'urgency', 'comment', 'status', 'warehouse_confirmed', 'bookkeeping_confirmed']
 
     def __init__(self, *args, **kwargs):
         qs = kwargs.pop('client_qs')

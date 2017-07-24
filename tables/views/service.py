@@ -94,7 +94,6 @@ def service_delete(request, company_pk, service_pk):
     if request.method == 'POST':
         service.delete()
         data['form_is_valid'] = True
-        data['services_list'] = services_list(request, company_pk)
     else:
         context = {
             'service': service,
@@ -121,5 +120,4 @@ def services_delete(request, company_pk):
                 return HttpResponseForbidden()
         Service.objects.filter(pk__in=cleaned_ids, company=company).delete()
         data['form_is_valid'] = True
-        data['services_list'] = services_list(request, company_pk)
     return JsonResponse(data)

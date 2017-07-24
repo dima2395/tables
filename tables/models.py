@@ -92,12 +92,21 @@ class Order(models.Model):
         ('urgently', 'Срочно'),
         ('usually', 'Обычно'),
     )
+    STATUS_CHOICES = (
+        ('processing', 'В процессе'),
+        ('completed', 'Завершено'), 
+    )
+
     company = models.ForeignKey(Company, verbose_name='Компания')
     client = models.ForeignKey(Client, verbose_name='Клиент')
     urgency = models.CharField(max_length=10, choices=URGENCY_CHOICES, default='usually', verbose_name='Срочность')
+    status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='processing', verbose_name='Статус')
+    warehouse_confirmed = models.BooleanField(default=False, verbose_name='Склад')
+    bookkeeping_confirmed = models.BooleanField(default=False, verbose_name='Бухгалтерия')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создано')
     created_by = models.ForeignKey(User, verbose_name='Агент')
     comment = models.TextField(blank=True, max_length=2000, default="", verbose_name="Комментарий")
+
 
 class OrderProductsList(models.Model):
     #on delete client, created_by nado ili net hz poka
