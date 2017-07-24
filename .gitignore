@@ -3,7 +3,8 @@
 *.pot
 *.pyc
 __pycache__/
-*/static
+/static
+*/migrations
 local_settings.py
 
 .env
