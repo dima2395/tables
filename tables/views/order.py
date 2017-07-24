@@ -9,7 +9,7 @@ from django.db.utils import IntegrityError
 from django.urls import reverse
 from django.utils import timezone
 from babel.dates import format_datetime
-
+from django.utils.translation import get_language
 from ..models import Company, Service, Client, Order, Product, OrderProductsList, OrderServicesList
 from ..forms import OrderProductsListForm, OrderServicesListForm, OrderForm
 
@@ -227,7 +227,7 @@ def orders_list(request, company_pk):
                 'value': order.urgency
             },
             'created_at': {
-                'date_str': format_datetime(timezone.localtime(order.created_at), 'd MMMM Y, HH:mm', locale=request.LANGUAGE_CODE),
+                'date_str': format_datetime(timezone.localtime(order.created_at), 'd MMMM Y, HH:mm', locale=get_language()),
                 'date_value': timezone.localtime(order.created_at).strftime('%Y%m%d%H%M')
 
 
