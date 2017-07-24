@@ -7,6 +7,8 @@ from django.template.loader import render_to_string
 from django.forms import modelformset_factory
 from django.db.utils import IntegrityError
 from django.urls import reverse
+from django.utils import timezone
+
 from ..models import Company, Service, Client, Order, Product, OrderProductsList, OrderServicesList
 from ..forms import OrderProductsListForm, OrderServicesListForm, OrderForm
 
@@ -222,7 +224,7 @@ def orders_list(request, company_pk):
                 'label': order.get_urgency_display(),
                 'value': order.urgency
             },
-            'created_at': order.created_at.strftime('%d %B %Y, %H:%M'),
+            'created_at': timezone.localtime(order.created_at).strftime('%d %B %Y, %H:%M'),
             'created_by': order.created_by.get_full_name(),
             'comment': order.comment,
             'products': products,
@@ -233,7 +235,7 @@ def orders_list(request, company_pk):
             }
         })
 
-    return result
+    return result 
 
 @login_required
 def orders_json(request, company_pk):
