@@ -201,6 +201,7 @@ def orders_list(request, company_pk):
     user = request.user
     orders = Order.objects.filter(company=company).order_by('-created_at')
     result = []
+    print("\n\n\nLanguage:\n\n\n",request.LANGUAGE_CODE)
 
     for order in orders:
         
@@ -245,7 +246,7 @@ def orders_list(request, company_pk):
 
 @login_required
 def orders_json(request, company_pk):
-    print('\n\n\nLUL:\n', {'data':orders_list(request, company_pk)})
+    
     return JsonResponse({'data':orders_list(request, company_pk)}, safe=False)
 
 
