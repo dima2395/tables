@@ -207,6 +207,8 @@ def orders_list(request, company_pk, filtered='all'):
         orders = Order.objects.filter(company=company, status='processing').order_by('-created_at')
     elif filtered == 'completed':
         orders = Order.objects.filter(company=company, status='completed').order_by('-created_at')
+    elif filtered == 'suspended':
+        orders = Order.objects.filter(company=company, status='suspended').order_by('-created_at')
 
 
     for order in orders:
@@ -238,7 +240,6 @@ def orders_list(request, company_pk, filtered='all'):
 
 
             },
-            'created_by': order.created_by.get_full_name(),
             'comment': order.comment,
             'products': products,
             'services': services,
@@ -300,3 +301,16 @@ def orders_completed(request, company_pk):
 def orders_completed_json(request, company_pk):
     
     return JsonResponse({'data':orders_list(request, company_pk, filtered='completed')}, safe=False)
+
+
+@login_required
+def orders_suspended(request, company_pk):
+    company = get_object_or_404(Company, pk=company_pk)
+    user = request.user
+
+    return render(request, 'tables/order/orders_suspended.html', {'company': company})
+
+@login_required
+def orders_suspended_json(request, company_pk):
+    
+    return JsonResponse({'data':orders_list(request, company_pk, filtered='suspended')}, safe=False)

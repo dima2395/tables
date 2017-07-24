@@ -101,7 +101,6 @@
               {
                 data: 'products',
                 render: function(products, type, row, meta) {
-                  console.log(meta.row)
                   var result = "";
                   for(var i=0; i < products.length; i++) {
                     var product = products[i];
@@ -179,8 +178,10 @@
 
                   if (status.value == 'processing') {
                     $label.addClass('label-warning')
-                  } else {
+                  } else if (status.value == 'completed') {
                     $label.addClass('label-success')
+                  } else if (status.value == 'suspended') {
+                    $label.addClass('label-info')
                   }
                   return $label.prop('outerHTML');
                 }

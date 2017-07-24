@@ -35,9 +35,30 @@
                       <a href="#"><i class="fa fa-usd"></i>Заказы <i class="fa fa-caret-down"></i>
                       </a>
                       <ul class="treeview-menu">
-                        <li><a href="{% url 'tables:orders-processing' company.pk %}"><i class="fa fa-circle" aria-hidden="true"></i>В процессе</a></li>
-                        <li><a href="{% url 'tables:orders-completed' company.pk %}"><i class="fa fa-circle" aria-hidden="true"></i>Завершенные</a></li>
-                        <li><a href="{% url 'tables:orders' company.pk %}"><i class="fa fa-circle" aria-hidden="true"></i>Все</a></li>
+                        <li>
+                          <a href="{% url 'tables:orders-processing' company.pk %}">
+                            <i class="fa fa-circle" aria-hidden="true" style="color: #f39c12;"></i>
+                            В процессе
+                          </a>
+                        </li>
+                        <li>
+                          <a href="{% url 'tables:orders-completed' company.pk %}">
+                            <i class="fa fa-circle" aria-hidden="true" style="color: #00a65a;"></i>
+                            Завершенные
+                          </a>
+                        </li>
+                        <li>
+                          <a href="{% url 'tables:orders-suspended' company.pk %}">
+                            <i class="fa fa-circle" aria-hidden="true" style="color: #00c0ef;"></i>
+                            Приостановленные
+                          </a>
+                        </li>
+                        <li>
+                          <a href="{% url 'tables:orders' company.pk %}">
+                            <i class="fa fa-circle" aria-hidden="true"></i>
+                            Все
+                          </a>
+                        </li>
                       </ul>
                     </li>
                     {% if user.profile.is_owner %}

@@ -94,7 +94,8 @@ class Order(models.Model):
     )
     STATUS_CHOICES = (
         ('processing', 'В процессе'),
-        ('completed', 'Завершено'), 
+        ('completed', 'Завершено'),
+        ('suspended', 'Приостановлено')
     )
 
     company = models.ForeignKey(Company, verbose_name='Компания')

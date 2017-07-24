@@ -180,8 +180,10 @@
 
                   if (status.value == 'processing') {
                     $label.addClass('label-warning')
-                  } else {
+                  } else if (status.value == 'completed') {
                     $label.addClass('label-success')
+                  } else if (status.value == 'suspended') {
+                    $label.addClass('label-info')
                   }
                   return $label.prop('outerHTML');
                 }

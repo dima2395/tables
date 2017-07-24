@@ -1,13 +1,13 @@
 {% extends "tables/base.html" %}
 {% load static %}
 
-{% block title %}Завершённые заказы компании "{{company.name}}"{% endblock title %}
+{% block title %}Приостановленные заказы компании "{{company.name}}"{% endblock title %}
 
 {% block css %}
     <link rel="stylesheet" href="{% static 'tables/css/dataTables.bootstrap.css'%}">
 {% endblock css %}
 
-{% block page_header %}Завершённые заказы{% endblock page_header %}
+{% block page_header %}Приостановленные заказы{% endblock page_header %}
 {% block page_subheader %}"{{company.name}}"{% endblock page_subheader %}
 
 {% block main %}
@@ -15,7 +15,7 @@
     <div class="row">
         <div class="box dataTable-box">
             <div class="box-header with-border">
-                <h3 class="box-title">Завершённые заказы</h3>
+                <h3 class="box-title">Приостановленные заказы</h3>
                 <a type="button" class="btn btn-primary js-create-row" href="{% url 'tables:order-create' company.pk %}">
                   <span class="fa fa-plus"></span>
                   Добавить заказ
@@ -80,7 +80,7 @@
 
       //datable(products-table)
       var table = $('.dataTable').DataTable({
-            ajaxSource: '{% url "tables:orders-completed-json" company.pk %}',
+            ajaxSource: '{% url "tables:orders-suspended-json" company.pk %}',
             columns: [
               {
                 data: 'pk',

@@ -67,5 +67,7 @@ urlpatterns = [
     url(r'company/(?P<company_pk>[0-9]+)/orders/json/processing/$', order.orders_processing_json, name='orders-processing-json'),
     url(r'company/(?P<company_pk>[0-9]+)/orders/completed/$', order.orders_completed, name='orders-completed'),
     url(r'company/(?P<company_pk>[0-9]+)/orders/json/completed/$', order.orders_completed_json, name='orders-completed-json'),
+    url(r'company/(?P<company_pk>[0-9]+)/orders/suspended/$', order.orders_suspended, name='orders-suspended'),
+    url(r'company/(?P<company_pk>[0-9]+)/orders/json/suspended/$', order.orders_suspended_json, name='orders-suspended-json'),
 
 ]
