@@ -7,7 +7,7 @@
 
     <!-- Sidebar Menu -->
     <ul class="sidebar-menu">
-      {% if user.profile.is_owner %}
+      {% if user.profile.is_manager %}
         <li class="add-new-company"><a href="{% url 'tables:company-create' %}"><i class="fa fa-plus"></i><span>Добавить компанию</span></a></li>
       {% endif %}
           {% if user.profile.get_companies.count %}
@@ -18,18 +18,20 @@
                 <li class="treeview {% if active_url in request.path %}
                   active
                 {% endif %}">
-                  <a href=""><i class="fa fa-home"></i><span>{{company.name}}</span>
+                  <a href="#"><i class="fa fa-home"></i><span>{{company.name}}</span>
                     <span class="pull-right-container">
                       <i class="fa fa-caret-down pull-right"></i>
                     </span>
                   </a>
                   <ul class="treeview-menu">
-                    <li>
-                      <a href="{% url 'tables:warehouses' company.pk %}">
-                        <i class="fa fa-archive"></i>Склады<span class="label label-primary pull-right warehouses-counter">{{ company.warehouse_set.count }}</span>
-                      </a>
-                    </li>
-                    <li><a href="{% url 'tables:services' company.pk %}"><i class="fa fa-briefcase"></i>Услуги</a></li>
+                    {% if user.profile.is_manager %}
+                      <li>
+                        <a href="{% url 'tables:warehouses' company.pk %}">
+                          <i class="fa fa-archive"></i>Склады
+                        </a>
+                      </li>
+                      <li><a href="{% url 'tables:services' company.pk %}"><i class="fa fa-briefcase"></i>Услуги</a></li>
+                    {% endif %}
                     <li><a href="{% url 'tables:clients' company.pk %}"><i class="fa fa-user"></i>Клиенты</a></li>
                     <li class="treeview active">
                       <a href="#"><i class="fa fa-usd"></i>Заказы <i class="fa fa-caret-down"></i>
@@ -61,10 +63,10 @@
                         </li>
                       </ul>
                     </li>
-                    {% if user.profile.is_owner %}
+                    {% if user.profile.is_manager %}
                       <li>
                         <a href="{% url 'tables:employees' company.pk %}">
-                          <i class="fa fa-users"></i>Сотрудники<span class="label label-warning pull-right employees-counter">{{ company.employees.count }}</span>
+                          <i class="fa fa-users"></i>Сотрудники
                         </a>
                       </li>
                       <li><a href="{% url 'tables:company-edit' company.pk %}"><i class="fa fa-cog"></i>Настройки</a></li>

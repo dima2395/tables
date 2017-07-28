@@ -1,0 +1,21 @@
+{% extends "tables/base.html" %}
+
+{% block title %}Редактировать сотрудника{% endblock title %}
+
+{% block page_header %}Редактировать сотрудника{% endblock page_header %}
+{% block page_subheader %}"{{company.name}}"{% endblock page_subheader %}
+
+{% block main %}
+    <div class="employee-create-page container-fluid">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="box">
+                    <div class="box-body">
+                        {% include "tables/employee/employee_edit_form.html" %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+{% endblock main %}

@@ -25,6 +25,8 @@ class Company(models.Model):
         return reverse('tables:company-edit', kwargs={'pk': self.pk})
 
 
+
+
 class Warehouse(models.Model):
     name = models.CharField(max_length=60, verbose_name='Название')
     address = models.CharField(max_length=128, blank=True, verbose_name='Адрес')

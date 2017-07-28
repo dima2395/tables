@@ -25,20 +25,21 @@ def company_create(request):
                 return redirect(reverse('tables:warehouses', kwargs={'company_pk': company.pk}))
                 #return redirect to company page
         return render(request, 'tables/company/company_create.html', {'form': form})
+    return redirect(reverse('tables:index'))
 
 
 @login_required
-def company_edit(request, pk):
+def company_edit(request, company_pk):
     user = request.user
-    company = get_object_or_404(Company, pk=pk)
+    company = get_object_or_404(Company, pk=company_pk)
     form = CompanyForm(request.POST or None, instance=company)
 
-    if company.owner == user:
+    if user.profile.in_company(company.pk) and user.profile.is_manager():
         if form.is_valid():
             try:
                 form.save()
                 messages.success(request, 'Изменения сохранены успешно.')
-                return redirect(reverse('tables:company-edit', kwargs={'pk': company.pk}))
+                return redirect(reverse('tables:company-edit', kwargs={'company_pk': company.pk}))
             except:
                 messages.error(request, 'Что-то пошло не так, попробуйте ещё раз.')
 
@@ -49,10 +50,11 @@ def company_edit(request, pk):
 
 
 @login_required
-def company_delete(request, pk):
+def company_delete(request, company_pk):
     user = request.user
-    company = get_object_or_404(Company, pk=pk)
-    if company.owner == user:
+    company = get_object_or_404(Company, pk=company_pk)
+
+    if user.profile.in_company(company.pk) and user.profile.is_manager():
         if request.method == 'POST':
             company.delete()
             return redirect(reverse('tables:index')) 

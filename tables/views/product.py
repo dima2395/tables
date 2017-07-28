@@ -7,6 +7,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from ..models import Company, Warehouse, Product
 from ..forms import ProductForm
+from django.utils import timezone
 
 
 
@@ -20,9 +21,9 @@ def products_json(request, company_pk, warehouse_pk):
 def products_list(request, company_pk, warehouse_pk):
     user = request.user
     company = get_object_or_404(Company, pk=company_pk)
-    warehouse = get_object_or_404(Warehouse, pk=warehouse_pk)
+    warehouse = get_object_or_404(Warehouse, company=company, pk=warehouse_pk)
 
-    if user == warehouse.company.owner and warehouse.company == company:
+    if user.profile.in_company(company.pk) and user.profile.is_manager():
         products = Product.objects.filter(warehouse=warehouse).order_by('-created_at')
 
         result = []
@@ -55,9 +56,9 @@ def products_list(request, company_pk, warehouse_pk):
 def products(request, company_pk, warehouse_pk):
     user = request.user
     company = get_object_or_404(Company, pk=company_pk)
-    warehouse = get_object_or_404(Warehouse, pk=warehouse_pk)
+    warehouse = get_object_or_404(Warehouse, company=company, pk=warehouse_pk)
 
-    if user == warehouse.company.owner and warehouse.company == company:
+    if user.profile.in_company(company.pk) and user.profile.is_manager():
         return render(request, 'tables/product/products.html', {'company': company, 'warehouse': warehouse})
     else:
         return redirect(reverse('tables:index'))
@@ -68,11 +69,11 @@ def products(request, company_pk, warehouse_pk):
 @login_required
 def product_create(request, company_pk, warehouse_pk):
     company = get_object_or_404(Company, pk=company_pk)
-    warehouse = get_object_or_404(Warehouse, pk=warehouse_pk)
+    warehouse = get_object_or_404(Warehouse, company=company, pk=warehouse_pk)
     user = request.user
     form = ProductForm(request.POST or None)
 
-    if user == warehouse.company.owner and warehouse.company == company:
+    if user.profile.in_company(company.pk) and user.profile.is_manager():
         if request.method == 'POST':
             if form.is_valid():
                 product = form.save(commit=False)
@@ -81,7 +82,7 @@ def product_create(request, company_pk, warehouse_pk):
                 product.last_modified_by = user
                 product.save()
                 messages.success(request, 'Товар успешно добавлен')
-                return redirect(reverse('tables:product-create',kwargs={'company_pk': company_pk, 'warehouse_pk': warehouse_pk}))
+                return redirect(reverse('tables:product-create',kwargs={'company_pk': company.pk, 'warehouse_pk': warehouse.pk}))
         return render(request, 'tables/product/product_create.html', {'company': company, 'warehouse':warehouse, 'form': form})
     else:
         return redirect(reverse('tables:index'))
@@ -91,16 +92,16 @@ def product_create(request, company_pk, warehouse_pk):
 def product_edit(request, company_pk, warehouse_pk, product_pk):
     user = request.user
     company = get_object_or_404(Company, pk=company_pk)
-    warehouse = get_object_or_404(Warehouse, pk=warehouse_pk)
-    product = get_object_or_404(Product, pk=product_pk)
+    warehouse = get_object_or_404(Warehouse, company=company, pk=warehouse_pk)
+    product = get_object_or_404(Product, warehouse=warehouse, pk=product_pk)
     form = ProductForm(request.POST or None, instance=product)
 
-    if user == warehouse.company.owner and warehouse.company == company and product.warehouse == warehouse:
+    if user.profile.in_company(company.pk) and user.profile.is_manager():
         if request.method == 'POST':
             if form.is_valid():
                 updated_product = form.save(commit=False)
                 updated_product.last_modified_by = user
-                updated_product.last_modified_at = datetime.now()
+                updated_product.last_modified_at = timezone.now()
                 try:
                     updated_product.save()
                     messages.success(request, 'Обновления сохранены')
@@ -115,13 +116,13 @@ def product_edit(request, company_pk, warehouse_pk, product_pk):
 
 @login_required
 def product_delete(request, company_pk, warehouse_pk, product_pk):
-    product = get_object_or_404(Product, pk=product_pk)
     company = get_object_or_404(Company, pk=company_pk)
-    warehouse = get_object_or_404(Warehouse, pk=warehouse_pk)
+    warehouse = get_object_or_404(Warehouse, company=company, pk=warehouse_pk)
+    product = get_object_or_404(Product, warehouse=warehouse, pk=product_pk)
     data = dict()
     user = request.user
 
-    if user == warehouse.company.owner and warehouse.company == company and product.warehouse == warehouse:
+    if user.profile.in_company(company.pk) and user.profile.is_manager():
         if request.method == 'POST':
             product.delete()
             data['form_is_valid'] = True
@@ -137,23 +138,25 @@ def product_delete(request, company_pk, warehouse_pk, product_pk):
 @login_required
 def products_delete(request, company_pk, warehouse_pk):
     company = get_object_or_404(Company, pk=company_pk)
-    warehouse = get_object_or_404(Warehouse, pk=warehouse_pk)
+    warehouse = get_object_or_404(Warehouse, company=company, pk=warehouse_pk)
     user = request.user
     data = dict()
 
-    if request.method == 'POST':
-        print('\n\n\n',request.POST, '\n\n\n')
-        ids = request.POST.get('ids').split(',')
-        cleaned_ids = []
-        for _id in ids:
-            try:
-                number = int(_id)
-                cleaned_ids.append(number)
-            except:
-                return HttpResponseForbidden()
-        #vrode bi vse zbs
-        Product.objects.filter(pk__in=cleaned_ids, warehouse=warehouse, warehouse__company=company).delete()
-        data['form_is_valid'] = True
-        data['products_list'] = products_list(request, company_pk, warehouse_pk)
+    if user.profile.in_company(company.pk) and user.profile.is_manager():
+        if request.method == 'POST':
+            
+            ids = request.POST.get('ids').split(',')
+            cleaned_ids = []
+            for _id in ids:
+                try:
+                    number = int(_id)
+                    cleaned_ids.append(number)
+                except:
+                    return HttpResponseForbidden()
+            #vrode bi vse zbs
+            Product.objects.filter(pk__in=cleaned_ids, warehouse=warehouse, warehouse__company=company).delete()
+            data['form_is_valid'] = True
 
-    return JsonResponse(data)
+        return JsonResponse(data)
+    else:
+        return redirect(reverse('tables:index'))

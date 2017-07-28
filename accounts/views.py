@@ -20,7 +20,7 @@ def signup(request):
             user.save()
             try:
                 user.profile.is_owner = True
-                user.profile.owner = user
+                user.profile.position = 'Manager'
                 current_site = get_current_site(request)
                 subject = 'Активируйте Ваш аккаунт'
                 message = render_to_string('registration/activation_email.txt', {

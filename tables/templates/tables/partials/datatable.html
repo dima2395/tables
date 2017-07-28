@@ -1,0 +1,75 @@
+{% extends "tables/base.html" %}
+{% load static %}
+
+
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'tables/css/dataTables.bootstrap.css'%}">
+{% endblock css %}
+
+
+
+{% block main %}
+<div class="products-page container-fluid">
+    <div class="row">
+        <div class="box products-box dataTable-box">
+            <div class="box-header with-border">
+                <h3 class="box-title">{% block table_name %}{% endblock table_name %}</h3>
+                <a type="button" class="btn btn-primary js-create-product" href="{% block create_url %}{% endblock create_url %}">
+                  <span class="fa fa-plus"></span>
+                  Добавить
+                </a>
+                <button type="button" class="btn btn-default disabled js-delete-selected" data-url="{% block multiple_delete_url %}{% endblock multiple_delete_url %}" data-csrf="{{csrf_token}}">
+                  Удалить выделенные <span>(0)</span>
+                </button>
+            </div>
+            <div class="box-body scrollbar-inner table-responsive">
+                <div class="col-xs-12">
+                    <table class="dataTable table table-striped table-bordered table-hover">
+                        <thead>
+                          <th class="row-select"><input type="checkbox" id="select-all-rows"></th>
+                          <th class="row-actions">Действия</th>
+                          {% block ths %}{% endblock ths %}
+                        </thead>
+                        <tbody>
+                        
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="box-footer">
+              
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-entity">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal-entities-delete">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      {% block multiple_delete_form %}
+        
+      {% endblock multiple_delete_form %}
+    </div>
+  </div>
+</div>
+
+
+{% endblock main %}
+
+{% block js %}
+    <script src="{% static 'tables/js/jquery.dataTables.min.js'%}"></script>
+    <script src="{% static 'tables/js/dataTables.bootstrap.min.js'%}"></script>
+{% endblock js %}
+
+{% block custom_js %}
+    
+{% endblock custom_js %}
+

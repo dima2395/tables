@@ -8,7 +8,11 @@ from tables.models import Company
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     is_owner = models.BooleanField(default=False)
-    #company
+    EMPLOYEE_POSITIONS = (
+    ('Manager', 'Менеджер'),
+    ('Agent', 'Агент по продажам')
+    )
+    position = models.CharField(max_length=20, choices=EMPLOYEE_POSITIONS, default='Agent', verbose_name='Должность')
 
 
     # used to get companies list in main sidebar
@@ -18,6 +22,21 @@ class Profile(models.Model):
         return user.company_set.all()
       else:
         return Company.objects.filter(employees=user)
+
+    def in_company(self, company_pk):
+        company = Company.objects.get(pk=company_pk)
+        user = self.user
+        if user == company.owner or (user in company.employees.all()):
+            return True
+        else:
+            return False
+
+    def is_manager(self):
+        return self.position == 'Manager'
+
+    def is_agent(self):
+        return self.position == 'Agent'
+
 
     def __str__(self):
         return "{}'s profile".format(self.user.username)

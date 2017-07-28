@@ -20,8 +20,8 @@ def warehouses(request, company_pk):
     company = get_object_or_404(Company, pk=company_pk)
     warehouses = Warehouse.objects.filter(company=company)
 
-    if (user == company.owner or user in company.employees.all()):
-        return render(request, 'tables/company/warehouse/warehouses.html', {'company': company, 'warehouses': warehouses})
+    if user.profile.in_company(company.pk) and user.profile.is_manager():
+        return render(request, 'tables/warehouse/warehouses.html', {'company': company, 'warehouses': warehouses})
     else:
         return redirect(reverse('tables:index'))
 
@@ -41,7 +41,7 @@ def save_warehouse_form(request, company_pk, form, template_name):
             data['form_is_valid'] = True
             warehouses = Warehouse.objects.filter(company=company)
             data['warehouses_list_count'] = warehouses.count()
-            data['warehouses_list'] = render_to_string('tables/company/warehouse/warehouses_list.html', {'warehouses': warehouses})
+            data['warehouses_list'] = render_to_string('tables/warehouse/warehouses_list.html', {'warehouses': warehouses})
 
         else:
             data['form_is_valid'] = False
@@ -57,8 +57,8 @@ def warehouse_create(request, company_pk):
     company = get_object_or_404(Company,pk=company_pk)
     form = WarehouseForm(request.POST or None)
 
-    if user == company.owner:
-        return save_warehouse_form(request, company_pk, form, 'tables/company/warehouse/warehouse_create_form.html')
+    if user.profile.in_company(company.pk) and user.profile.is_manager():
+        return save_warehouse_form(request, company_pk, form, 'tables/warehouse/warehouse_create_form.html')
     else:
         return redirect(reverse('tables:index'))
 
@@ -67,34 +67,35 @@ def warehouse_create(request, company_pk):
 def warehouse_edit(request, company_pk, warehouse_pk):
     user = request.user
     company = get_object_or_404(Company, pk=company_pk)
-    warehouse = get_object_or_404(Warehouse, pk=warehouse_pk)
+    warehouse = get_object_or_404(Warehouse, company=company, pk=warehouse_pk)
 
-    if warehouse.company == company and user == warehouse.company.owner:
+    if user.profile.in_company(company.pk) and user.profile.is_manager():
 
         if request.method == 'POST':
             form = WarehouseForm(request.POST, instance=warehouse)
         else:
             form = WarehouseForm(instance=warehouse)
-        return save_warehouse_form(request, company_pk, form, 'tables/company/warehouse/warehouse_edit_form.html')
+        return save_warehouse_form(request, company_pk, form, 'tables/warehouse/warehouse_edit_form.html')
     else:
         return redirect(reverse('tables:index'))
 
 @login_required
 def warehouse_delete(request, company_pk, warehouse_pk):
-    warehouse = get_object_or_404(Warehouse, pk=warehouse_pk)
     company = get_object_or_404(Company, pk=company_pk)
+    warehouse = get_object_or_404(Warehouse, company=company, pk=warehouse_pk)
+    
     data = dict()
     user = request.user
-    if warehouse.company == company and user == warehouse.company.owner:
+    if user.profile.in_company(company.pk) and user.profile.is_manager():
         if request.method == 'POST':
             warehouse.delete()
             data['form_is_valid'] = True
             warehouses = Warehouse.objects.filter(company=company)
             data['warehouses_list_count'] = warehouses.count()
-            data['warehouses_list'] = render_to_string('tables/company/warehouse/warehouses_list.html', {'warehouses': warehouses})
+            data['warehouses_list'] = render_to_string('tables/warehouse/warehouses_list.html', {'warehouses': warehouses})
         else:
             context = {'warehouse': warehouse}
-            data['html_form'] = render_to_string('tables/company/warehouse/warehouse_delete_form.html', context, request=request)
+            data['html_form'] = render_to_string('tables/warehouse/warehouse_delete_form.html', context, request=request)
         return JsonResponse(data)
     else:
         return redirect(reverse('tables:index'))

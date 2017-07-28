@@ -10,9 +10,9 @@ urlpatterns = [
 
 
     url(r'^company/create/$', company.company_create, name='company-create'),
-    url(r'^company/(?P<pk>[0-9]+)/$', company.company, name='company'),
-    url(r'^company/(?P<pk>[0-9]+)/edit/$', company.company_edit, name='company-edit'),
-    url(r'^company/(?P<pk>[0-9]+)/delete/$', company.company_delete, name='company-delete'),
+    url(r'^company/(?P<company_pk>[0-9]+)/$', company.company, name='company'),
+    url(r'^company/(?P<company_pk>[0-9]+)/edit/$', company.company_edit, name='company-edit'),
+    url(r'^company/(?P<company_pk>[0-9]+)/delete/$', company.company_delete, name='company-delete'),
 
 
 
@@ -35,7 +35,9 @@ urlpatterns = [
     url(r'^company/(?P<company_pk>[0-9]+)/employee/create/$', employee.employee_create, name='employee-create'),
     url(r'^company/(?P<company_pk>[0-9]+)/employee/(?P<employee_pk>[0-9]+)/edit/$', employee.employee_edit, name='employee-edit'),
     url(r'^company/(?P<company_pk>[0-9]+)/employee/(?P<employee_pk>[0-9]+)/delete/$', employee.employee_delete, name='employee-delete'),
+    url(r'^company/(?P<company_pk>[0-9]+)/employees/delete$', employee.employees_delete, name='employees-delete'),
     url(r'^company/(?P<company_pk>[0-9]+)/employees/$', employee.employees, name='employees'),
+    url(r'^company/(?P<company_pk>[0-9]+)/employees/json$', employee.employees_json, name='employees-json'),
 
 
 

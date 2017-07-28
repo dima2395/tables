@@ -1,79 +1,27 @@
-{% extends "tables/base.html" %}
-{% load static %}
+{% extends "tables/partials/datatable.html" %}
 
-{% block title %}Клиенты компании "{{company.name}}"{% endblock title %}
+{% block title %} Клиенты {% endblock title %}
 
-{% block css %}
-    <link rel="stylesheet" href="{% static 'tables/css/dataTables.bootstrap.css'%}">
-{% endblock css %}
+{% block page_header %} Клиенты {% endblock page_header %}
 
-{% block page_header %}Кленты{% endblock page_header %}
-{% block page_subheader %}"{{company.name}}"{% endblock page_subheader %}
+{% block page_subheader %} "{{company.name}}" {% endblock page_subheader %}
 
-{% block main %}
-<div class="services-page container-fluid">
-    <div class="row">
-        <div class="box dataTable-box">
-            <div class="box-header with-border">
-                <h3 class="box-title">Клиенты</h3>
-                <a type="button" class="btn btn-primary js-create-row" href="{% url 'tables:client-create' company.pk %}">
-                  <span class="fa fa-plus"></span>
-                  Добавить клиента
-                </a>
-                <button type="button" class="btn btn-default disabled js-delete-selected" data-url="{% url 'tables:clients-delete' company.pk %}" data-csrf="{{csrf_token}}">
-                  Удалить выделенные <span>(0)</span>
-                </button>
-            </div>
-            <div class="box-body scrollbar-inner table-responsive">
-                <div class="col-xs-12">
-                    <table class="dataTable table table-striped table-bordered table-hover" data-ajax-source="">
-                        <thead>
-                            <th class="row-select"><input type="checkbox" id="select-all-rows"></th>
-                            <th class="row-actions">Действия</th>
-                            <th>Название фирмы или ФИО клиента</th>
-                            <th>Номер телефона</th>
-                            <th>Адрес</th>
-                            <th>Описание</th>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="box-footer">
-              
-            </div>
-        </div>
-    </div>
-</div>
+{% block create_url %}{% url 'tables:client-create' company.pk %}{% endblock create_url %}
 
-<div class="modal fade" id="modal-entity">
-  <div class="modal-dialog">
-    <div class="modal-content">
-    </div>
-  </div>
-</div>
+{% block multiple_delete_url %}{% url 'tables:clients-delete' company.pk %}{% endblock multiple_delete_url %}
 
-<div class="modal fade" id="modal-entities-delete">
-  <div class="modal-dialog">
-    <div class="modal-content">
-        {% include "tables/service/services_delete_form.html" %}
-    </div>
-  </div>
-</div>
+{% block multiple_delete_form %} {% include "tables/client/clients_delete_form.html" %} {% endblock multiple_delete_form %}
 
-
-{% endblock main %}
-
-{% block js %}
-    <script src="{% static 'tables/js/jquery.dataTables.min.js'%}"></script>
-    <script src="{% static 'tables/js/dataTables.bootstrap.min.js'%}"></script>
-{% endblock js %}
+{% block ths %}
+    <th>Название фирмы или ФИО клиента</th>
+    <th>Номер телефона</th>
+    <th>Адрес</th>
+    <th>Описание</th>
+{% endblock ths %}
 
 {% block custom_js %}
 <script>
     $(function(){
-
       //datable(products-table)
       var table = $('.dataTable').DataTable({
             ajax: '{% url "tables:clients-json" company.pk %}',
@@ -105,131 +53,125 @@
             ]
       });
 
-      //put controls into box footer
       $($('.dataTable-box .box-body .row')[2]).appendTo('.dataTable-box .box-footer');
 
-      //put controls into box header
-      // $($('.products-box .box-body .row')[0]).appendTo('.products-box .box-header');
-      // Functions //
+        //put controls into box header
+        // $($('.products-box .box-body .row')[0]).appendTo('.products-box .box-header');
+        // Functions //
 
-      var loadForm = function() {
-        var btn = $(this);
-        $.ajax({
-          url: btn.attr('data-url'),
-          type: 'get',
-          dataType: 'json',
-          beforeSend: function(){
-            $('#modal-entity').modal('show');
-          },
-          success: function(data) {
-            $('#modal-entity .modal-content').html(data.html_form)
-          }
-        });
-      };
-
-      var saveForm = function(){
-        var form = $(this);
-        $.ajax({
-          url: form.attr('action'),
-          data: form.serialize(),
-          type: form.attr('method'),
-          dataType: 'json',
-          success: function(data) {
-            if (data.form_is_valid) {
-              $('.dataTable').dataTable().fnClearTable();
-              if (data.clients_list.length) {
-                $('.dataTable').dataTable().fnAddData(data.clients_list);
-              }
-              
-              $('#modal-entity').modal('hide');
-            }
-            else {
+        var loadForm = function() {
+          var btn = $(this);
+          $.ajax({
+            url: btn.attr('data-url'),
+            type: 'get',
+            dataType: 'json',
+            beforeSend: function(){
+              $('#modal-entity').modal('show');
+            },
+            success: function(data) {
               $('#modal-entity .modal-content').html(data.html_form)
             }
+          });
+        };
+
+        var saveForm = function(){
+          var form = $(this);
+          $.ajax({
+            url: form.attr('action'),
+            data: form.serialize(),
+            type: form.attr('method'),
+            dataType: 'json',
+            success: function(data) {
+              if (data.form_is_valid) {
+                table.ajax.reload();
+                $('#modal-entity').modal('hide');
+              }
+              else {
+                $('#modal-entity .modal-content').html(data.html_form)
+              }
+            }
+          });
+          return false;
+        };
+
+
+        //Delete product
+        $('.dataTable').on('click', '.js-delete-row', loadForm);
+        $('#modal-entity').on('submit', '.js-row-delete-form', saveForm);
+
+
+        //multiple delete
+
+
+        $('#select-all-rows').on('change', function(){
+          var rows = table.rows({'page': 'current'}).nodes();
+
+          if(this.checked) {
+            $('.row-checkbox', rows).prop('checked', true).trigger('change');
+          } else {
+            $('.row-checkbox', rows).prop('checked', false).trigger('change');
           }
+
         });
-        return false;
-      };
 
 
-      //Delete product
-      $('.dataTable').on('click', '.js-delete-row', loadForm);
-      $('#modal-entity').on('submit', '.js-row-delete-form', saveForm);
-
-
-      //multiple delete
-
-
-      $('#select-all-rows').on('change', function(){
-        var rows = table.rows({'page': 'current'}).nodes();
-
-        if(this.checked) {
-          $('.row-checkbox', rows).prop('checked', true).trigger('change');
-        } else {
-          $('.row-checkbox', rows).prop('checked', false).trigger('change');
+        function get_ids() {
+          var rows = table.rows({'page': 'current'}).nodes();
+          var result = [];
+          $('.row-checkbox', rows).each(function(i, element){
+            if (element.checked) {
+              result.push($(element).data('row-id'));
+            }
+          });
+          return result;
         }
 
-      });
-
-
-      function get_ids() {
-        var rows = table.rows({'page': 'current'}).nodes();
-        var result = [];
-        $('.row-checkbox', rows).each(function(i, element){
-          if (element.checked) {
-            result.push($(element).data('row-id'));
+        function render_delete_button() {
+          var delete_button = $('.js-delete-selected');
+          if (get_ids().length > 0) {
+            delete_button.removeClass('btn-default disabled').addClass('btn-danger');
+            
+          } else {
+            delete_button.removeClass('btn-danger').addClass('btn-default disabled');
+            
           }
-        });
-        return result;
-      }
-
-      function render_delete_button() {
-        var delete_button = $('.js-delete-selected');
-        if (get_ids().length > 0) {
-          delete_button.removeClass('btn-default disabled').addClass('btn-danger');
-          
-        } else {
-          delete_button.removeClass('btn-danger').addClass('btn-default disabled');
-          
+          $('span', delete_button).text('('+ get_ids().length +')');
         }
-        $('span', delete_button).text('('+ get_ids().length +')');
-      }
 
 
-      $('.dataTable').on('change', '.row-checkbox', function() {
+        $('.dataTable').on('change', '.row-checkbox', function() {
 
-        render_delete_button();
-      })
+          render_delete_button();
+        })
 
-      $('.js-delete-selected').on('click', function() {
-        var btn = $(this);
-        if (!btn.hasClass('disabled')) {
-          $('#modal-entities-delete').modal('show');
-          $('.js-rows-delete-form').on('submit', function(e) {
-            var ids = get_ids().join(',');
-            $.ajax({
-              url: btn.attr('data-url'),
-              method: 'post',
-              data: {
-                'ids': ids,
-                'csrfmiddlewaretoken': btn.attr('data-csrf'),
-              },
-              success: function(data) {
-                if (data.form_is_valid) {
-                  $('.dataTable').dataTable().fnClearTable();
-                  render_delete_button();
-                  $('#modal-entities-delete').modal('hide');
-                  if (data.clients_list.length) {
-                    $('.dataTable').dataTable().fnAddData(data.clients_list);
+        $('.js-delete-selected').on('click', function() {
+          var btn = $(this);
+          if (!btn.hasClass('disabled')) {
+            $('#modal-entities-delete').modal('show');
+            $('.js-rows-delete-form').on('submit', function(e) {
+              var ids = get_ids().join(',');
+              $.ajax({
+                url: btn.attr('data-url'),
+                method: 'post',
+                data: {
+                  'ids': ids,
+                  'csrfmiddlewaretoken': btn.attr('data-csrf'),
+                },
+                success: function(data) {
+                  if (data.form_is_valid) {
+                    $('.dataTable').dataTable().fnClearTable();
+                    table.ajax.reload();
+                    render_delete_button();
+                    
+                    $('#modal-entities-delete').modal('hide');
                   }
                 }
-              }
-            });
-            return false;
-          })
-        }
-    })
+              });
+              return false;
+            })
 
+          }
+        });
     });
 </script>
 {% endblock custom_js %}

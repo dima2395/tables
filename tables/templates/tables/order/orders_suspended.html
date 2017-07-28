@@ -1,85 +1,37 @@
-{% extends "tables/base.html" %}
-{% load static %}
+{% extends "tables/partials/datatable.html" %}
 
-{% block title %}Приостановленные заказы компании "{{company.name}}"{% endblock title %}
+{% block title %} Приостановленные заказы {% endblock title %}
 
-{% block css %}
-    <link rel="stylesheet" href="{% static 'tables/css/dataTables.bootstrap.css'%}">
-{% endblock css %}
+{% block page_header %} Приостановленные заказы {% endblock page_header %}
 
-{% block page_header %}Приостановленные заказы{% endblock page_header %}
-{% block page_subheader %}"{{company.name}}"{% endblock page_subheader %}
+{% block page_subheader %} "{{company.name}}" {% endblock page_subheader %}
 
-{% block main %}
-<div class="orders-page container-fluid">
-    <div class="row">
-        <div class="box dataTable-box">
-            <div class="box-header with-border">
-                <h3 class="box-title">Приостановленные заказы</h3>
-                <a type="button" class="btn btn-primary js-create-row" href="{% url 'tables:order-create' company.pk %}">
-                  <span class="fa fa-plus"></span>
-                  Добавить заказ
-                </a>
-                <button type="button" class="btn btn-default disabled js-delete-selected" data-url="{% url 'tables:orders-delete' company.pk %}" data-csrf="{{csrf_token}}">
-                  Удалить выделенные <span>(0)</span>
-                </button>
-            </div>
-            <div class="box-body scrollbar-inner table-responsive">
-                <div class="col-xs-12">
-                    <table id="orders-table" class="dataTable table table-striped table-bordered table-hover">
-                        <thead>
-                            <th class="row-select"><input type="checkbox" id="select-all-rows"></th>
-                            <th class="row-actions">Действия</th>
-                            <th>Клиент</th>
-                            <th>Товары</th>
-                            <th>Услуги</th>
-                            <th class="row-urgency">Срочность</th>
-                            <th class="row-confirmation">Склад</th>
-                            <th class="row-confirmation">Бухг.</th>
-                            <th class="row-status">Статус</th>
-                            <th class="row-created-at">Создан</th>
-                            <th>Агент</th>
-                            <th>Комментарий</th>
-                        </thead>
-                        <tbody>
-                        
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+{% block create_url %}{% url 'tables:order-create' company.pk %}{% endblock create_url %}
 
-<div class="modal fade" id="modal-entity">
-  <div class="modal-dialog">
-    <div class="modal-content">
-    </div>
-  </div>
-</div>
+{% block multiple_delete_url %}{% url 'tables:orders-delete' company.pk %}{% endblock multiple_delete_url %}
 
-<div class="modal fade" id="modal-entities-delete">
-  <div class="modal-dialog">
-    <div class="modal-content">
-        {% include "tables/order/orders_delete_form.html" %}
-    </div>
-  </div>
-</div>
+{% block multiple_delete_form %} {% include "tables/order/orders_delete_form.html" %} {% endblock multiple_delete_form %}
 
-
-{% endblock main %}
-
-{% block js %}
-    <script src="{% static 'tables/js/jquery.dataTables.min.js'%}"></script>
-    <script src="{% static 'tables/js/dataTables.bootstrap.min.js'%}"></script>
-{% endblock js %}
+{% block ths %}
+    <th>Клиент</th>
+    <th>Товары</th>
+    <th>Услуги</th>
+    <th class="row-urgency">Срочность</th>
+    <th class="row-confirmation">Склад</th>
+    <th class="row-confirmation">Бухг.</th>
+    <th class="row-status">Статус</th>
+    <th class="row-created-at">Создан</th>
+    <th>Агент</th>
+    <th>Комментарий</th>
+{% endblock ths %}
 
 {% block custom_js %}
 <script>
     $(function(){
 
       //datable(products-table)
-      var table = $('.dataTable').DataTable({
+            var table = $('.dataTable').DataTable({
+            // data: JSON.parse('{{products|safe}}'),
             ajaxSource: '{% url "tables:orders-suspended-json" company.pk %}',
             columns: [
               {
@@ -101,6 +53,7 @@
               {
                 data: 'products',
                 render: function(products, type, row, meta) {
+
                   var result = "";
                   for(var i=0; i < products.length; i++) {
                     var product = products[i];
@@ -207,126 +160,125 @@
             ]
       });
 
-
-      //put controls into box footer
       $($('.dataTable-box .box-body .row')[2]).appendTo('.dataTable-box .box-footer');
 
-      var loadForm = function() {
-        var btn = $(this);
-        $.ajax({
-          url: btn.attr('data-url'),
-          type: 'get',
-          dataType: 'json',
-          beforeSend: function(){
-            $('#modal-entity').modal('show');
-          },
-          success: function(data) {
-            $('#modal-entity .modal-content').html(data.html_form)
-          }
-        });
-      };
+        //put controls into box header
+        // $($('.products-box .box-body .row')[0]).appendTo('.products-box .box-header');
+        // Functions //
 
-      var saveForm = function(){
-        var form = $(this);
-        $.ajax({
-          url: form.attr('action'),
-          data: form.serialize(),
-          type: form.attr('method'),
-          dataType: 'json',
-          success: function(data) {
-            if (data.form_is_valid) {
-              table.ajax.reload();
-              
-              $('#modal-entity').modal('hide');
-            }
-            else {
+        var loadForm = function() {
+          var btn = $(this);
+          $.ajax({
+            url: btn.attr('data-url'),
+            type: 'get',
+            dataType: 'json',
+            beforeSend: function(){
+              $('#modal-entity').modal('show');
+            },
+            success: function(data) {
               $('#modal-entity .modal-content').html(data.html_form)
             }
-          }
-        });
-        return false;
-      };
+          });
+        };
 
-
-      //Delete product
-      $('.dataTable').on('click', '.js-delete-row', loadForm);
-      $('#modal-entity').on('submit', '.js-row-delete-form', saveForm);
-
-      
-
-
-            //multiple delete
-
-
-      $('#select-all-rows').on('change', function(){
-        var rows = table.rows({'page': 'current'}).nodes();
-
-        if(this.checked) {
-          $('.row-checkbox', rows).prop('checked', true).trigger('change');
-        } else {
-          $('.row-checkbox', rows).prop('checked', false).trigger('change');
-        }
-
-      });
-
-
-      function get_ids() {
-        var rows = table.rows({'page': 'current'}).nodes();
-        var result = [];
-        $('.row-checkbox', rows).each(function(i, element){
-          if (element.checked) {
-            result.push($(element).data('row-id'));
-          }
-        });
-        return result;
-      }
-
-      function render_delete_button() {
-        var delete_button = $('.js-delete-selected');
-        if (get_ids().length > 0) {
-          delete_button.removeClass('btn-default disabled').addClass('btn-danger');
-          
-        } else {
-          delete_button.removeClass('btn-danger').addClass('btn-default disabled');
-          
-        }
-        $('span', delete_button).text('('+ get_ids().length +')');
-      }
-
-
-      $('.dataTable').on('change', '.row-checkbox', function() {
-
-        render_delete_button();
-      })
-
-      $('.js-delete-selected').on('click', function() {
-        var btn = $(this);
-        if (!btn.hasClass('disabled')) {
-          $('#modal-entities-delete').modal('show');
-          $('.js-rows-delete-form').on('submit', function(e) {
-            var ids = get_ids().join(',');
-            $.ajax({
-              url: btn.attr('data-url'),
-              method: 'post',
-              data: {
-                'ids': ids,
-                'csrfmiddlewaretoken': btn.attr('data-csrf'),
-              },
-              success: function(data) {
-                if (data.form_is_valid) {
-                  table.ajax.reload();
-                  render_delete_button();
-                  $('#modal-entities-delete').modal('hide');
-                  
-                }
+        var saveForm = function(){
+          var form = $(this);
+          $.ajax({
+            url: form.attr('action'),
+            data: form.serialize(),
+            type: form.attr('method'),
+            dataType: 'json',
+            success: function(data) {
+              if (data.form_is_valid) {
+                table.ajax.reload();
+                $('#modal-entity').modal('hide');
               }
-            });
-            return false;
-          })
+              else {
+                $('#modal-entity .modal-content').html(data.html_form)
+              }
+            }
+          });
+          return false;
+        };
+
+
+        //Delete product
+        $('.dataTable').on('click', '.js-delete-row', loadForm);
+        $('#modal-entity').on('submit', '.js-row-delete-form', saveForm);
+
+
+        //multiple delete
+
+
+        $('#select-all-rows').on('change', function(){
+          var rows = table.rows({'page': 'current'}).nodes();
+
+          if(this.checked) {
+            $('.row-checkbox', rows).prop('checked', true).trigger('change');
+          } else {
+            $('.row-checkbox', rows).prop('checked', false).trigger('change');
+          }
+
+        });
+
+
+        function get_ids() {
+          var rows = table.rows({'page': 'current'}).nodes();
+          var result = [];
+          $('.row-checkbox', rows).each(function(i, element){
+            if (element.checked) {
+              result.push($(element).data('row-id'));
+            }
+          });
+          return result;
         }
-    })
+
+        function render_delete_button() {
+          var delete_button = $('.js-delete-selected');
+          if (get_ids().length > 0) {
+            delete_button.removeClass('btn-default disabled').addClass('btn-danger');
+            
+          } else {
+            delete_button.removeClass('btn-danger').addClass('btn-default disabled');
+            
+          }
+          $('span', delete_button).text('('+ get_ids().length +')');
+        }
 
 
+        $('.dataTable').on('change', '.row-checkbox', function() {
+
+          render_delete_button();
+        })
+
+        $('.js-delete-selected').on('click', function() {
+          var btn = $(this);
+          if (!btn.hasClass('disabled')) {
+            $('#modal-entities-delete').modal('show');
+            $('.js-rows-delete-form').on('submit', function(e) {
+              var ids = get_ids().join(',');
+              $.ajax({
+                url: btn.attr('data-url'),
+                method: 'post',
+                data: {
+                  'ids': ids,
+                  'csrfmiddlewaretoken': btn.attr('data-csrf'),
+                },
+                success: function(data) {
+                  if (data.form_is_valid) {
+                    $('.dataTable').dataTable().fnClearTable();
+                    table.ajax.reload();
+                    render_delete_button();
+                    
+                    $('#modal-entities-delete').modal('hide');
+                  }
+                }
+              });
+              return false;
+            })
+
+          }
+        });
     });
 </script>
 {% endblock custom_js %}

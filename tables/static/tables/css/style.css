@@ -99,9 +99,6 @@
   max-height: calc(100vh - 200px);
   overflow-y: auto; }
 
-.js-create-product {
-  margin-left: 10px; }
-
 .main-sidebar .sidebar .add-new-company {
   background-color: #3c8dbc; }
   .main-sidebar .sidebar .add-new-company a {
