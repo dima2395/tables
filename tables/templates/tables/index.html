@@ -6,7 +6,7 @@
 {% block page_header %}Главная{% endblock page_header %}
 
 {% block main %}
-    {% if user.is_authenticated %}
+    {% if user.is_authenticated and user.profile.is_agent %}
         <div class="row">
             <div class="col-md-3">
                 <div class="box">
@@ -32,7 +32,7 @@
     {% else %}
         <p>Тут пока пусто</p>
     {% endif %}
-    
+
 {% endblock main %}
 
 {% block custom_js %}
