@@ -18,6 +18,7 @@ class Company(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     employees = models.ManyToManyField(User, related_name='employees')
 
+
     def __str__(self):
         return '{}\'s {}'.format(self.owner.username, self.name)
 

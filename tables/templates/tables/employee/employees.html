@@ -1,3 +1,4 @@
+
 {% extends "tables/partials/datatable.html" %}
 
 {% block title %} Сотрудники {% endblock title %}
@@ -15,18 +16,22 @@
 {% block ths %}
     <th>Имя</th>
     <th>Фамилия</th>
-    <th>Аккаунт</th>
     <th>Должность</th>
+    <th>Телефон</th>
+    <th>Email</th>
+    <th>Аккаунт</th>
 {% endblock ths %}
+
 
 {% block custom_js %}
 <script>
+
     $(function(){
 
       //datable(products-table)
       var table = $('.dataTable').DataTable({
             ajax: '{% url "tables:employees-json" company.pk %}',
-
+            responsive: true,
             columns: [
               {
                 data: 'pk',
@@ -37,22 +42,28 @@
               },
               {
                 data: 'actions',
+                width: '125px',
                 render: function(data, type, full, meta){
                   var button_edit ="<a type=\"button\" class=\"btn btn-warning btn-sm js-edit-row\" href=\""+ data.edit +"\"><span class=\"fa fa-pencil\"></span></a>";
+                  var button_change_password ="<a type=\"button\" class=\"btn btn-primary btn-sm js-edit-row\" href=\""+ data.change_password +"\"><span class=\"fa fa-key\"></span></a>";
                   var button_delete = "<button type=\"button\" class=\"btn btn-danger btn-sm js-delete-row\" data-url=\"" + data.delete +"\"><span class=\"fa fa-trash-o\"></span></button>";
-                  return (button_edit + button_delete);
+                  return (button_edit + button_change_password + button_delete);
                 }
               },
               {data: 'first_name'},
               {data: 'last_name'},
+              {data: 'position'},
+              {data: 'telephone_number'},
+              {data: 'email'},
               {data: 'username'},
-              {data: 'position'}
+              
             ],
             order: [],
             columnDefs: [
                 {"orderable": false, "targets": [0, 1]},
             ]
       });
+
 
       $($('.dataTable-box .box-body .row')[2]).appendTo('.dataTable-box .box-footer');
 

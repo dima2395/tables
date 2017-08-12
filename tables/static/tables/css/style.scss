@@ -8,6 +8,23 @@
     }
 }
 
+//left sidebar
+
+.label-dark {
+    background-color: #4d5b61;
+    color: #e0e2e6;
+}
+
+.orders.active>a {
+    border-left-color: #1e282c !important;
+}
+
+//left sidebar
+
+form .form-buttons {
+    padding-top: 10px;
+}
+
 .dataTable-box {
     .box-title {
         margin-right: 10px;
@@ -21,7 +38,7 @@
                 width: 15px !important;
             }
             .row-actions {
-                width: 80px !important;
+                // width: 80px !important;
                 padding-right: 5px;
             }
 
@@ -167,14 +184,19 @@
 
 .main-sidebar {
     .sidebar {
-        .add-new-company {
+        .add-new-company, .add-new-order {
             background-color: #3c8dbc;
+
             a {
                 color: white;
+                border-left: none;
+                text-transform: uppercase;
+                font-weight: bold;
             }
             &:hover>a {
                 background-color: #3c8dbc;
-                border-left-color:#255e80;
+                background-color: #367da7;
+                border-left: none;
             }
             
         }

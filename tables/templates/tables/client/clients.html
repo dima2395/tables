@@ -25,7 +25,7 @@
       //datable(products-table)
       var table = $('.dataTable').DataTable({
             ajax: '{% url "tables:clients-json" company.pk %}',
-
+            responsive: true,
             columns: [
               {
                 data: 'pk',
@@ -36,6 +36,7 @@
               },
               {
                 data: 'actions',
+                width: '100px',
                 render: function(data, type, full, meta){
                   var button_edit ="<a type=\"button\" class=\"btn btn-warning btn-sm js-edit-row\" href=\""+ data.edit +"\"><span class=\"fa fa-pencil\"></span></a>";
                   var button_delete = "<button type=\"button\" class=\"btn btn-danger btn-sm js-delete-row\" data-url=\"" + data.delete +"\"><span class=\"fa fa-trash-o\"></span></button>";

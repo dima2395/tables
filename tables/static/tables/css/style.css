@@ -5,6 +5,16 @@
     color: white;
     opacity: 0.8; }
 
+.label-dark {
+  background-color: #4d5b61;
+  color: #e0e2e6; }
+
+.orders.active > a {
+  border-left-color: #1e282c !important; }
+
+form .form-buttons {
+  padding-top: 10px; }
+
 .dataTable-box .box-title {
   margin-right: 10px; }
 
@@ -12,7 +22,6 @@
   padding: 9px;
   width: 15px !important; }
 .dataTable thead tr .row-actions {
-  width: 80px !important;
   padding-right: 5px; }
 .dataTable tbody .js-edit-row {
   margin-right: 10px; }
@@ -99,13 +108,17 @@
   max-height: calc(100vh - 200px);
   overflow-y: auto; }
 
-.main-sidebar .sidebar .add-new-company {
+.main-sidebar .sidebar .add-new-company, .main-sidebar .sidebar .add-new-order {
   background-color: #3c8dbc; }
-  .main-sidebar .sidebar .add-new-company a {
-    color: white; }
-  .main-sidebar .sidebar .add-new-company:hover > a {
+  .main-sidebar .sidebar .add-new-company a, .main-sidebar .sidebar .add-new-order a {
+    color: white;
+    border-left: none;
+    text-transform: uppercase;
+    font-weight: bold; }
+  .main-sidebar .sidebar .add-new-company:hover > a, .main-sidebar .sidebar .add-new-order:hover > a {
     background-color: #3c8dbc;
-    border-left-color: #255e80; }
+    background-color: #367da7;
+    border-left: none; }
 
 .form-group.required label:after {
   content: " *";

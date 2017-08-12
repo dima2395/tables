@@ -1,5 +1,6 @@
 <!-- Left side column. contains the logo and sidebar -->
 {% load static %}
+{% load orders_helpers %}
 <aside class="main-sidebar">
 
   <!-- sidebar: style can be found in sidebar.less -->
@@ -7,79 +8,90 @@
 
     <!-- Sidebar Menu -->
     <ul class="sidebar-menu">
-      {% if user.profile.is_manager %}
+      {% if user.profile.is_manager and not user.profile.get_companies.count %}
         <li class="add-new-company"><a href="{% url 'tables:company-create' %}"><i class="fa fa-plus"></i><span>Добавить компанию</span></a></li>
       {% endif %}
-          {% if user.profile.get_companies.count %}
-            <li class="header">Компании</li>
-            {% for company in user.profile.get_companies %}
-                {# used for setting active menu item #}
-                {% url 'tables:company' company.pk as active_url %}
-                <li class="treeview {% if active_url in request.path %}
-                  active
-                {% endif %}">
-                  <a href="#"><i class="fa fa-home"></i><span>{{company.name}}</span>
-                    <span class="pull-right-container">
-                      <i class="fa fa-caret-down pull-right"></i>
-                    </span>
+        {% if user.profile.get_companies.count %}
+          {% for company in user.profile.get_companies %}
+          <li class="header">{{company.name}}</li>
+          {% if user.profile.is_agent %}
+            <li class="add-new-order">
+              <a href="{% url 'tables:order-create' company.pk %}">
+                <i class="fa fa-plus"></i><span>Добавить Заказ</span>
+              </a>
+            </li>
+          {% endif %}
+          {% if user.profile.is_manager %}
+            <li>
+              <a href="{% url 'tables:warehouses' company.pk %}">
+                <i class="fa fa-archive"></i><span>Склады</span>
+                <span class="label label-dark pull-right">{{company.warehouse_set.count}}</span>
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'tables:services' company.pk %}">
+                <i class="fa fa-briefcase"></i><span>Услуги</span>
+                <span class="label label-dark pull-right">{{company.service_set.count}}</span>
+              </a>
+            </li>
+          {% endif %}
+            <li>
+              <a href="{% url 'tables:clients' company.pk %}">
+                <i class="fa fa-user"></i><span>Клиенты</span>
+                <span class="label label-dark pull-right">{{company.client_set.count}}</span>
+              </a>
+            </li>
+            <li class="treeview orders active">
+              <a href="#">
+                <i class="fa fa-usd"></i><span>Заказы</span></i>
+              </a>
+              <ul class="treeview-menu">
+                <li>
+                  <a href="{% url 'tables:orders-processing' company.pk %}">
+                    <i class="fa fa-circle" aria-hidden="true" style="color: #f39c12;"></i>
+                    В процессе
+                    <span class="label label-warning pull-right">{% get_orders_count  "processing" %}</span>
                   </a>
-                  <ul class="treeview-menu">
-                    {% if user.profile.is_manager %}
-                      <li>
-                        <a href="{% url 'tables:warehouses' company.pk %}">
-                          <i class="fa fa-archive"></i>Склады
-                        </a>
-                      </li>
-                      <li><a href="{% url 'tables:services' company.pk %}"><i class="fa fa-briefcase"></i>Услуги</a></li>
-                    {% endif %}
-                    <li><a href="{% url 'tables:clients' company.pk %}"><i class="fa fa-user"></i>Клиенты</a></li>
-                    <li class="treeview active">
-                      <a href="#"><i class="fa fa-usd"></i>Заказы <i class="fa fa-caret-down"></i>
-                      </a>
-                      <ul class="treeview-menu">
-                        <li>
-                          <a href="{% url 'tables:orders-processing' company.pk %}">
-                            <i class="fa fa-circle" aria-hidden="true" style="color: #f39c12;"></i>
-                            В процессе
-                          </a>
-                        </li>
-                        <li>
-                          <a href="{% url 'tables:orders-completed' company.pk %}">
-                            <i class="fa fa-circle" aria-hidden="true" style="color: #00a65a;"></i>
-                            Завершенные
-                          </a>
-                        </li>
-                        <li>
-                          <a href="{% url 'tables:orders-suspended' company.pk %}">
-                            <i class="fa fa-circle" aria-hidden="true" style="color: #00c0ef;"></i>
-                            Приостановленные
-                          </a>
-                        </li>
-                        <li>
-                          <a href="{% url 'tables:orders' company.pk %}">
-                            <i class="fa fa-circle" aria-hidden="true"></i>
-                            Все
-                          </a>
-                        </li>
-                      </ul>
-                    </li>
-                    {% if user.profile.is_manager %}
-                      <li>
-                        <a href="{% url 'tables:employees' company.pk %}">
-                          <i class="fa fa-users"></i>Сотрудники
-                        </a>
-                      </li>
-                      <li><a href="{% url 'tables:company-edit' company.pk %}"><i class="fa fa-cog"></i>Настройки</a></li>
-                    {% endif %}
-                  </ul>
                 </li>
-            {% endfor %}
+                <li>
+                  <a href="{% url 'tables:orders-completed' company.pk %}">
+                    <i class="fa fa-circle" aria-hidden="true" style="color: #00a65a;"></i>
+                    Завершенные
+                    <span class="label label-success pull-right">{% get_orders_count  "completed" %}</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="{% url 'tables:orders-suspended' company.pk %}">
+                    <i class="fa fa-circle" aria-hidden="true" style="color: #00c0ef;"></i>
+                    Приостановленные
+                    <span class="label label-info pull-right">{% get_orders_count  "suspended" %}</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="{% url 'tables:orders' company.pk %}">
+                    <i class="fa fa-circle" aria-hidden="true"></i>
+                    Все
+                    <span class="label label-dark pull-right">{% get_orders_count  %}</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            {% if user.profile.is_manager %}
+              <li>
+                <a href="{% url 'tables:employees' company.pk %}">
+                  <i class="fa fa-users"></i><span>Сотрудники</span>
+                  <span class="label label-dark pull-right">{{ company.employees.count }}</span>
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'tables:company-edit' company.pk %}">
+                  <i class="fa fa-cog"></i><span>Настройки</span>
+                </a>
+              </li>
           {% endif %}
 
-
-      
-
-
+          {% endfor %}
+        {% endif %}
     </ul>
     <!-- /.sidebar-menu -->
   </section>

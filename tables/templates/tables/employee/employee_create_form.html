@@ -3,5 +3,9 @@
     {% include "tables/partials/form_template.html" with form=profileForm %}
     {% include "tables/partials/form_template.html" %}
     {% csrf_token %}
-    <button type="submit" class="btn btn-primary">Добавить</button>
+    <div class="form-buttons">
+        <button type="submit" class="btn btn-primary">Добавить</button>
+        <a href="{% url 'tables:employees' company.pk %}" class="btn bg-olive pull-right">Перейти к списку сотрудников</a>
+    </div>
+    
 </form>

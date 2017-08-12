@@ -2,5 +2,10 @@
     {% include "tables/partials/messages.html" %}
     {% include "tables/partials/form_template.html" %}
     {% csrf_token %}
-    <button type="submit" class="btn btn-primary">Сохранить</button>
+    <div class="form-buttons">
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <a href="{% url 'tables:clients' company.pk %}" class="btn bg-olive pull-right">
+            Перейти к списку клиентов "{{company.name}}"
+        </a>
+    </div>
 </form>

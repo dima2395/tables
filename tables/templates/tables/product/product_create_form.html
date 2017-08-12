@@ -1,12 +1,13 @@
 {% load widget_tweaks %}
-<p>
-    <a href="{% url 'tables:products' company.pk warehouse.pk %}">Вернуться на склад <b>"{{warehouse.name}}"</b></a>
-</p>
 
 <form method="post" action="{% url 'tables:product-create' company.pk warehouse.pk %}" class="js-product-create-form">
         {% csrf_token %}
         {% include "tables/partials/messages.html" %}
         {% include "tables/partials/form_template.html" %}
-        <button type="submit" class="btn btn-primary">Добавить</button>
+        <div class="form-buttons">
+            <button type="submit" class="btn btn-primary">Добавить</button>
+            <a href="{% url 'tables:products' company.pk warehouse.pk %}" class="btn bg-olive pull-right">
+                Перейти к списку товаров "{{warehouse.name}}"
+            </a>
+        </div>
 </form>
-    

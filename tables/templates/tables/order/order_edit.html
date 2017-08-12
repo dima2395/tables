@@ -197,35 +197,15 @@
                                         </div>
                                     </div>
                                 {% endwith %}
-                                <button type="submit" class="btn btn-primary">Сохранить</button>
+                                <div class="form-buttons">
+                                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                                    <a href="{% url 'tables:orders' company.pk %}" class="btn bg-olive pull-right">
+                                        Перейти к списку заказов "{{company.name}}"
+                                    </a>
+                                </div>
                             </form>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-6">
-                    <h2>Заказы:</h2>
-                    <ul class="orders-list">
-                        {% for order in orders %}
-                            <li><b>Клиент:</b> {{ order.client }} <span class="{{order.urgency}}">({{ order.get_urgency_display }})</span></li>
-                            <li><b>Товары</b>:
-                                <ol>
-                                    {% for orderProduct in order.orderproductslist_set.all %}
-                                        <li>{{ orderProduct.product }} ({{ orderProduct.quantity }} {{ orderProduct.product.unit }})</li>
-                                    {% endfor %}
-                                </ol>
-                            </li>
-                            <li><b>Услуги</b>:
-                                <ol>
-                                    {% for orderService in order.orderserviceslist_set.all %}
-                                        <li>{{ orderService.service }}</li>
-                                    {% endfor %}
-                                </ol>
-                            </li>
-                            <li><b>Комментарий:</b> <i>{{ order.comment }}</i></li>
-                            <li><b>Агент:</b> <i>{{order.created_by.get_full_name}} ({{order.created_by}})</i></li>
-                            <hr>
-                        {% endfor %}
-                    </ul>
                 </div>
             </div>
         </div>

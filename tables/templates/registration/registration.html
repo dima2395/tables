@@ -6,22 +6,17 @@
 
 {% block main %}
     <div class="signup-page">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-lg-5">
-                    <div class="box box-success">
-                        <div class="box-header">
-                            <h2 class="box-title">Форма регистрации</h2>
-                        </div>
-                        <div class="box-body">
-                            <form action="." method="post" id="login-form">
-                                {% include "tables/partials/messages.html" %}
-                                {% include "tables/partials/form_template.html" %}
-                                {% csrf_token %}
-                                <input type="hidden" name="next" value="{{ next }}">
-                                <button class="btn btn-success" type="submit">Зарегистрироваться</button>
-                            </form>
-                        </div>
+        <div class="row">
+            <div class="col-lg-5">
+                <div class="box box-success">
+                    <div class="box-body">
+                        <form action="." method="post" id="login-form">
+                            {% include "tables/partials/messages.html" %}
+                            {% include "tables/partials/form_template.html" %}
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{{ next }}">
+                            <button class="btn btn-success" type="submit">Зарегистрироваться</button>
+                        </form>
                     </div>
                 </div>
             </div>

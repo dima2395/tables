@@ -34,6 +34,7 @@ urlpatterns = [
 
     url(r'^company/(?P<company_pk>[0-9]+)/employee/create/$', employee.employee_create, name='employee-create'),
     url(r'^company/(?P<company_pk>[0-9]+)/employee/(?P<employee_pk>[0-9]+)/edit/$', employee.employee_edit, name='employee-edit'),
+    url(r'^company/(?P<company_pk>[0-9]+)/employee/(?P<employee_pk>[0-9]+)/change-password/$', employee.change_password, name='employee-change-password'),
     url(r'^company/(?P<company_pk>[0-9]+)/employee/(?P<employee_pk>[0-9]+)/delete/$', employee.employee_delete, name='employee-delete'),
     url(r'^company/(?P<company_pk>[0-9]+)/employees/delete$', employee.employees_delete, name='employees-delete'),
     url(r'^company/(?P<company_pk>[0-9]+)/employees/$', employee.employees, name='employees'),

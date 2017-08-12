@@ -11,16 +11,18 @@ from django.contrib.auth import login, logout
 
 # Create your views here.
 def signup(request):
-    
+
+    form = SignUpForm(request.POST or None)
+
     if request.method == 'POST':
-        form = SignUpForm(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)
-            user.is_active = False
-            user.save()
             try:
+                user = form.save(commit=False)
+                user.is_active = False
+                user.save()
                 user.profile.is_owner = True
                 user.profile.position = 'Manager'
+                user.save()
                 current_site = get_current_site(request)
                 subject = 'Активируйте Ваш аккаунт'
                 message = render_to_string('registration/activation_email.txt', {
@@ -35,16 +37,9 @@ def signup(request):
                 user.email_user(subject, message)
                 messages.success(request, 'Письмо активации было успешно отправлено на вашу почту')
             except:
-                messages.error(request, 'Письмо не было отправлено, попробуйте зарегистрироваться ещё раз')
+                messages.error(request, 'Что-то пошло не так, попробуйте ещё раз')
                 user.delete()
-            else:
-                user.save()
-
-            return render(request,'registration/registration.html', {'form': form})
-        else:
-            return render(request,'registration/registration.html', {'form': form})
     else:
-        form = SignUpForm()
         return render(request,'registration/registration.html', {'form': form})
 
 

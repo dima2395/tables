@@ -191,7 +191,12 @@
                                         </div>
                                     </div>
                                 {% endwith %}
-                                <button type="submit" class="btn btn-primary">Создать</button>
+                                <div class="form-buttons">
+                                    <button type="submit" class="btn btn-primary">Добавить</button>
+                                    <a href="{% url 'tables:orders' company.pk %}" class="btn bg-olive pull-right">
+                                        Перейти к списку заказов "{{company.name}}"
+                                    </a>
+                                </div>
                             </form>
                         </div>
                     </div>

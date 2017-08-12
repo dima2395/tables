@@ -8,6 +8,7 @@ from tables.models import Company
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     is_owner = models.BooleanField(default=False)
+    telephone_number = models.CharField(max_length=25, verbose_name='Номер телефона')
     EMPLOYEE_POSITIONS = (
     ('Manager', 'Менеджер'),
     ('Agent', 'Агент по продажам')
