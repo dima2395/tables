@@ -1,0 +1,10 @@
+{% autoescape off %}
+    Здравствуйте, {{ employee.get_full_name }}.
+    Вас добавили в компанию "{{company.name}}".
+
+    Ваш логин: {{employee.username}}
+    Ваш пароль: {{password}}
+
+    Ссылка для входа:
+    http://{{ domain }}{% url 'login'%}
+{% endautoescape %}

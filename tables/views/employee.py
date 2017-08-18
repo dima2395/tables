@@ -7,6 +7,7 @@ from django.template.loader import render_to_string
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.contrib.auth.models import Group
+from django.contrib.sites.shortcuts import get_current_site
 
 
 from ..models import Company
@@ -46,8 +47,21 @@ def employee_create(request, company_pk):
                     profile.user = employee
                     profile.save()
                     company.employees.add(employee)
-                    messages.success(request, 'Сотрудник успешно добавлен')
-                except:
+                    #email send (we send password on email, this is insecure)
+                    current_site = get_current_site(request)
+                    subject = 'Вас добавили в компанию "{}"'.format(company.name)
+                    message = render_to_string('registration/employee_registration.txt', {
+                        'employee': employee,
+                        'domain': current_site,
+                        'company': company,
+                        'password': form.cleaned_data['password1'],
+                    })
+                    #Здесь бы удалять пользователя если что-то пошло не так
+                    #Если емейл не дойдёт или он введён неверно, пользователь создастся, но подтвердить уже будет нельзя
+                    #Это ошибка которую надо будет решить в будующем
+                    employee.email_user(subject, message)
+                    messages.success(request, 'Сотрудник успешно добавлен, ему отправлено письмо с его логином и паролем')
+                except Exception as e:
                     employee.delete()
                     messages.error(request, 'Что-то пошло не так, попробуйте ещё раз' )
                 return redirect(reverse('tables:employee-create',kwargs={'company_pk': company.pk}))

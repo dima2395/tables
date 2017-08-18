@@ -1,3 +1,5 @@
+
+
 .alert {
     opacity: 0.8;
 
@@ -30,6 +32,7 @@ form .form-buttons {
         margin-right: 10px;
     }
 }
+
 .dataTable {
     thead {
         tr {
@@ -38,20 +41,27 @@ form .form-buttons {
                 width: 15px !important;
             }
             .row-actions {
-                // width: 80px !important;
-                padding-right: 5px;
+                width: 115px !important;
+                padding-right: 0px;
             }
 
         }
-
     }
 
     tbody {
-        .js-edit-row {
-            margin-right: 10px;
+        tr {
+            td:nth-child(2) {
+                min-width:115px;
+                max-width: 115px;
+                a {
+                    display: inline-block;
+                    margin-right: 5px;
+                }
+
+            }
         }
     }
-    
+
 }
 
 .warehouses-page {
@@ -94,54 +104,6 @@ form .form-buttons {
     }
 }
 
-.employees-page {
-    .js-employee-create {
-        border:2px dashed #777;
-        color: #565656;
-        text-align: center;
-        height: 220px;
-        .icon i {
-            font-size: 85px;
-            padding: 15px 0;
-        }
-        .text {
-            font-size: 22px;
-            padding: 10px 0 15px;
-            text-transform: uppercase;
-        }
-        &:hover {
-            cursor: pointer;
-            color: #5cb85c;
-            border:2px dashed #5cb85c;
-        }
-    }
-    .employee {
-        height: 220px;
-        .icon i {
-            font-size: 70px;
-        }
-        .box-body {
-            min-height: 160px;
-            .info {
-                .name {
-                    font-size: 18px;
-                    span {
-                        color: #777;
-                        font-size: 16px;
-                        font-style: italic;
-                    }
-                    
-                }
-                .email {
-                    i {
-                        color: #8a8a8a;
-                    }
-                    font-size: 15px;
-                }
-            }
-        }
-    }
-}
 
 .orders-page {
     #orders-table {

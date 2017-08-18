@@ -22,9 +22,14 @@ form .form-buttons {
   padding: 9px;
   width: 15px !important; }
 .dataTable thead tr .row-actions {
-  padding-right: 5px; }
-.dataTable tbody .js-edit-row {
-  margin-right: 10px; }
+  width: 115px !important;
+  padding-right: 0px; }
+.dataTable tbody tr td:nth-child(2) {
+  min-width: 115px;
+  max-width: 115px; }
+  .dataTable tbody tr td:nth-child(2) a {
+    display: inline-block;
+    margin-right: 5px; }
 
 .warehouses-page .js-warehouse-create {
   text-align: center;
@@ -55,39 +60,6 @@ form .form-buttons {
   .warehouses-page .warehouse .address {
     text-align: center;
     font-size: 17px; }
-
-.employees-page .js-employee-create {
-  border: 2px dashed #777;
-  color: #565656;
-  text-align: center;
-  height: 220px; }
-  .employees-page .js-employee-create .icon i {
-    font-size: 85px;
-    padding: 15px 0; }
-  .employees-page .js-employee-create .text {
-    font-size: 22px;
-    padding: 10px 0 15px;
-    text-transform: uppercase; }
-  .employees-page .js-employee-create:hover {
-    cursor: pointer;
-    color: #5cb85c;
-    border: 2px dashed #5cb85c; }
-.employees-page .employee {
-  height: 220px; }
-  .employees-page .employee .icon i {
-    font-size: 70px; }
-  .employees-page .employee .box-body {
-    min-height: 160px; }
-    .employees-page .employee .box-body .info .name {
-      font-size: 18px; }
-      .employees-page .employee .box-body .info .name span {
-        color: #777;
-        font-size: 16px;
-        font-style: italic; }
-    .employees-page .employee .box-body .info .email {
-      font-size: 15px; }
-      .employees-page .employee .box-body .info .email i {
-        color: #8a8a8a; }
 
 .orders-page #orders-table thead .row-urgency {
   width: 70px !important; }

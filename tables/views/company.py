@@ -15,7 +15,7 @@ def company(request, pk):
 def company_create(request):
     form = CompanyForm(request.POST or None)
     user = request.user
-    if user.profile.is_owner:
+    if user.profile.is_owner and user.company_set.count() == 0:
         if request.method == 'POST':
             if form.is_valid():
                 company = form.save(commit=False)
