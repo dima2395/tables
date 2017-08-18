@@ -26,7 +26,7 @@
       //datable(products-table)
       var table = $('.dataTable').DataTable({
             ajax: '{% url "tables:products-json" company.pk warehouse.pk %}',
-
+            autoWidth: false,
             columns: [
               {
                 data: 'pk',

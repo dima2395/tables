@@ -33,6 +33,7 @@
             var table = $('.dataTable').DataTable({
             // data: JSON.parse('{{products|safe}}'),
             ajaxSource: '{% url "tables:orders-completed-json" company.pk %}',
+            autoWidth: false,
             columns: [
               {
                 data: 'pk',
