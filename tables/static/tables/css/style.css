@@ -37,9 +37,10 @@ form .form-buttons {
   border: 2px dashed #777;
   color: #565656;
   border-radius: 3px;
-  height: 243px; }
+  height: 257px;
+  margin-bottom: 15px; }
   .warehouses-page .js-warehouse-create i {
-    padding: 15px 0;
+    padding: 35px 0;
     font-size: 85px; }
   .warehouses-page .js-warehouse-create div {
     font-size: 25px;
@@ -50,8 +51,9 @@ form .form-buttons {
     color: #5cb85c;
     border: 2px dashed #5cb85c; }
 .warehouses-page .warehouse {
-  height: 243px;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1) !important; }
+  height: 257px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1) !important;
+  margin-bottom: 28px; }
   .warehouses-page .warehouse .icon {
     text-align: center; }
     .warehouses-page .warehouse .icon i {

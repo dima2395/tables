@@ -39,7 +39,11 @@
                 width: '100px',
                 render: function(data, type, full, meta){
                   var button_edit ="<a type=\"button\" class=\"btn btn-warning btn-sm js-edit-row\" href=\""+ data.edit +"\"><span class=\"fa fa-pencil\"></span></a>";
-                  var button_delete = "<button type=\"button\" class=\"btn btn-danger btn-sm js-delete-row\" data-url=\"" + data.delete +"\"><span class=\"fa fa-trash-o\"></span></button>";
+                  var button_delete = "";
+                  if (data.delete) {
+                    button_delete = "<button type=\"button\" class=\"btn btn-danger btn-sm js-delete-row\" data-url=\"" + data.delete +"\"><span class=\"fa fa-trash-o\"></span></button>";
+                  }
+                  
                   return (button_edit + button_delete);
                 }
               },

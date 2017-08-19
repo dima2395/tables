@@ -53,7 +53,7 @@ def clients_list(request, company_pk):
         result = []
 
         for client in clients:
-            result.append({
+            current = {
                 'pk': client.pk,
                 'name': client.name,
                 'description': client.description,
@@ -61,9 +61,12 @@ def clients_list(request, company_pk):
                 'telephone_number': client.telephone_number,
                 'actions': {
                     'edit': reverse('tables:client-edit', kwargs={'company_pk': company.pk, 'client_pk':client.pk}),
-                    'delete': reverse('tables:client-delete', kwargs={'company_pk': company.pk, 'client_pk':client.pk})
+                    
                 }
-            })
+            }
+            if user.profile.is_manager():
+                current['actions']['delete'] = reverse('tables:client-delete', kwargs={'company_pk': company.pk, 'client_pk':client.pk})
+            result.append(current)
         return result
     else:
         return redirect(reverse('tables:index'))
@@ -106,7 +109,7 @@ def client_delete(request, company_pk, client_pk):
     user = request.user
     data = dict()
 
-    if user.profile.in_company(company.pk) and (user.profile.is_manager() or user.profile.is_agent()):
+    if user.profile.in_company(company.pk) and user.profile.is_manager():
         if request.method == 'POST':
             client.delete()
             data['form_is_valid'] = True
@@ -126,7 +129,7 @@ def clients_delete(request, company_pk):
     user = request.user
     data = dict()
 
-    if user.profile.in_company(company.pk) and (user.profile.is_manager() or user.profile.is_agent()):
+    if user.profile.in_company(company.pk) and user.profile.is_manager():
         if request.method == 'POST':
             ids = request.POST.get('ids').split(',')
             cleaned_ids = []
