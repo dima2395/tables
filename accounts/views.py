@@ -7,6 +7,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.urls import reverse
 from django.contrib.auth import login, logout
 
 # Create your views here.
@@ -39,8 +40,8 @@ def signup(request):
             except:
                 messages.error(request, 'Что-то пошло не так, попробуйте ещё раз')
                 user.delete()
-    else:
-        return render(request,'registration/registration.html', {'form': form})
+            return redirect(reverse('accounts:signup'))
+    return render(request,'registration/registration.html', {'form': form})
 
 
 def activate(request, uid64, token):
@@ -57,7 +58,7 @@ def activate(request, uid64, token):
             user.is_active = True
             user.save()
             login(request, user)
-            return redirect('tables:company-create')
+            return redirect(reverse('tables:company-create'))
 
 
 
