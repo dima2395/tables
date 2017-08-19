@@ -1,7 +1,7 @@
 <form action="{% url 'tables:employee-create' company.pk %}" method="post">
     {% include "tables/partials/messages.html" %}
-    {% include "tables/partials/form_template.html" with form=profileForm %}
     {% include "tables/partials/form_template.html" %}
+    {% include "tables/partials/form_template.html" with form=profileForm %}
     {% csrf_token %}
     <div class="form-buttons">
         <button type="submit" class="btn btn-primary">Добавить</button>

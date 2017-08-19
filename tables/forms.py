@@ -33,6 +33,7 @@ class EmployeeForm(UserCreationForm):
         self.fields['email'].required=True
         self.fields['first_name'].required=True
         self.fields['last_name'].required=True
+        self.fields['username'].label='Логин'
 
     def clean_email(self):
         email = self.cleaned_data['email'].strip()
@@ -42,7 +43,7 @@ class EmployeeForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']
+        fields = ['username', 'email', 'password1', 'password2', 'first_name', 'last_name' ]
 
 
 class EmployeeEditForm(forms.ModelForm):
