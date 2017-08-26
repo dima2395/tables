@@ -1,9 +1,6 @@
 {% autoescape off %}
     Здравствуйте, {{ employee.get_full_name }}.
-    Вас добавили в компанию "{{company.name}}".
-
-    Ваш логин: {{employee.username}}
-    Ваш пароль: {{password}}
+    {{ manager.get_full_name }} добавил Вас в компанию "{{company.name}}", уточните у него Ваш логин и пароль.
 
     Ссылка для входа:
     http://{{ domain }}{% url 'login'%}

@@ -105,6 +105,7 @@ class WarehouseForm(forms.ModelForm):
         model = Warehouse
         fields = ['name', 'address']
 
+
 class ClientForm(forms.ModelForm):
     class Meta:
         model = Client
@@ -121,7 +122,9 @@ class OrderForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         qs = kwargs.pop('client_qs')
         super(OrderForm, self).__init__(*args,**kwargs)
+        self.fields['client'].widget.attrs['style'] = "width:100%"
         self.fields['client'].queryset = qs
+
 
 class OrderProductsListForm(forms.ModelForm):
     product = forms.ModelChoiceField(queryset=Product.objects.none(), label='Товар', required=True)
@@ -134,6 +137,7 @@ class OrderProductsListForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         qs = kwargs.pop('product_qs')
         super(OrderProductsListForm, self).__init__(*args, **kwargs)
+        self.fields['product'].widget.attrs['style'] = "width:100%"
         self.fields['product'].queryset = qs
 
 
@@ -146,6 +150,7 @@ class OrderServicesListForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         qs = kwargs.pop('service_qs')
         super(OrderServicesListForm, self).__init__(*args, **kwargs)
+        self.fields['service'].widget.attrs['style'] = "width:100%"
         self.fields['service'].queryset = qs
 
 

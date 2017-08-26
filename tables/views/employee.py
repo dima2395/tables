@@ -54,7 +54,7 @@ def employee_create(request, company_pk):
                         'employee': employee,
                         'domain': current_site,
                         'company': company,
-                        'password': form.cleaned_data['password1'],
+                        'manager': user,
                     })
                     #Здесь бы удалять пользователя если что-то пошло не так
                     #Если емейл не дойдёт или он введён неверно, пользователь создастся, но подтвердить уже будет нельзя

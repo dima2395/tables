@@ -7,7 +7,10 @@ class SignUpForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super(SignUpForm, self).__init__(*args,**kwargs)
+        self.fields['username'].label='Логин'
         self.fields['email'].required=True
+        self.fields['first_name'].required=True
+        self.fields['last_name'].required=True
     
     def clean_email(self):
         email = self.cleaned_data['email'].strip()
@@ -17,6 +20,6 @@ class SignUpForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ['username','email','password1', 'password2']
+        fields = ['username','email','first_name', 'last_name' ,'password1', 'password2']
 
 
