@@ -116,7 +116,7 @@ class OrderProductsList(models.Model):
     #on delete client, created_by nado ili net hz poka
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Товар')
-    quantity = models.DecimalField(max_digits=12, decimal_places=2, default="", verbose_name="Кол-во")
+    quantity = models.DecimalField(max_digits=12, decimal_places=2, default=0, verbose_name="Кол-во")
 
 
 class OrderServicesList(models.Model):
