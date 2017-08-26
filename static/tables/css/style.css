@@ -5,6 +5,16 @@
     color: white;
     opacity: 0.8; }
 
+.label-dark {
+  background-color: #4d5b61;
+  color: #e0e2e6; }
+
+.orders.active > a {
+  border-left-color: #1e282c !important; }
+
+form .form-buttons {
+  padding-top: 10px; }
+
 .dataTable-box .box-title {
   margin-right: 10px; }
 
@@ -12,10 +22,14 @@
   padding: 9px;
   width: 15px !important; }
 .dataTable thead tr .row-actions {
-  width: 80px !important;
-  padding-right: 5px; }
-.dataTable tbody .js-edit-row {
-  margin-right: 10px; }
+  width: 115px !important;
+  padding-right: 0px; }
+.dataTable tbody tr td:nth-child(2) {
+  min-width: 115px;
+  max-width: 115px; }
+  .dataTable tbody tr td:nth-child(2) a {
+    display: inline-block;
+    margin-right: 5px; }
 
 .warehouses-page .js-warehouse-create {
   text-align: center;
@@ -23,9 +37,10 @@
   border: 2px dashed #777;
   color: #565656;
   border-radius: 3px;
-  height: 243px; }
+  height: 257px;
+  margin-bottom: 15px; }
   .warehouses-page .js-warehouse-create i {
-    padding: 15px 0;
+    padding: 35px 0;
     font-size: 85px; }
   .warehouses-page .js-warehouse-create div {
     font-size: 25px;
@@ -36,8 +51,9 @@
     color: #5cb85c;
     border: 2px dashed #5cb85c; }
 .warehouses-page .warehouse {
-  height: 243px;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1) !important; }
+  height: 257px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1) !important;
+  margin-bottom: 28px; }
   .warehouses-page .warehouse .icon {
     text-align: center; }
     .warehouses-page .warehouse .icon i {
@@ -47,39 +63,14 @@
     text-align: center;
     font-size: 17px; }
 
-.employees-page .js-employee-create {
-  border: 2px dashed #777;
-  color: #565656;
-  text-align: center;
-  height: 220px; }
-  .employees-page .js-employee-create .icon i {
-    font-size: 85px;
-    padding: 15px 0; }
-  .employees-page .js-employee-create .text {
-    font-size: 22px;
-    padding: 10px 0 15px;
-    text-transform: uppercase; }
-  .employees-page .js-employee-create:hover {
-    cursor: pointer;
-    color: #5cb85c;
-    border: 2px dashed #5cb85c; }
-.employees-page .employee {
-  height: 220px; }
-  .employees-page .employee .icon i {
-    font-size: 70px; }
-  .employees-page .employee .box-body {
-    min-height: 160px; }
-    .employees-page .employee .box-body .info .name {
-      font-size: 18px; }
-      .employees-page .employee .box-body .info .name span {
-        color: #777;
-        font-size: 16px;
-        font-style: italic; }
-    .employees-page .employee .box-body .info .email {
-      font-size: 15px; }
-      .employees-page .employee .box-body .info .email i {
-        color: #8a8a8a; }
-
+.orders-page #orders-table thead .row-urgency {
+  width: 70px !important; }
+.orders-page #orders-table thead .row-created-at {
+  width: 105px !important; }
+.orders-page #orders-table thead .row-confirmation {
+  width: 35px !important; }
+.orders-page #orders-table thead .row-status {
+  width: 50px !important; }
 .orders-page #orders-table tbody tr.urgently {
   background-color: #ffe2e2; }
   .orders-page #orders-table tbody tr.urgently:hover {
@@ -91,16 +82,17 @@
   max-height: calc(100vh - 200px);
   overflow-y: auto; }
 
-.js-create-product {
-  margin-left: 10px; }
-
-.main-sidebar .sidebar .add-new-company {
+.main-sidebar .sidebar .add-new-company, .main-sidebar .sidebar .add-new-order {
   background-color: #3c8dbc; }
-  .main-sidebar .sidebar .add-new-company a {
-    color: white; }
-  .main-sidebar .sidebar .add-new-company:hover > a {
+  .main-sidebar .sidebar .add-new-company a, .main-sidebar .sidebar .add-new-order a {
+    color: white;
+    border-left: none;
+    text-transform: uppercase;
+    font-weight: bold; }
+  .main-sidebar .sidebar .add-new-company:hover > a, .main-sidebar .sidebar .add-new-order:hover > a {
     background-color: #3c8dbc;
-    border-left-color: #255e80; }
+    background-color: #367da7;
+    border-left: none; }
 
 .form-group.required label:after {
   content: " *";
@@ -110,6 +102,12 @@
   border: 1px solid #9e9e9e;
   padding: 10px 15px;
   margin-bottom: 10px; }
+  .order-create-page .order-form fieldset.state .confirmations, .order-edit-page .order-form fieldset.state .confirmations {
+    margin-top: 10px; }
+  .order-create-page .order-form fieldset.state label span, .order-edit-page .order-form fieldset.state label span {
+    display: inline-block;
+    padding-top: 10px;
+    padding-left: 4px; }
   .order-create-page .order-form fieldset .delete-button, .order-edit-page .order-form fieldset .delete-button {
     margin-top: 31px; }
   .order-create-page .order-form fieldset legend, .order-edit-page .order-form fieldset legend {

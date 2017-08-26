@@ -1,3 +1,5 @@
+
+
 .alert {
     opacity: 0.8;
 
@@ -8,11 +10,29 @@
     }
 }
 
+//left sidebar
+
+.label-dark {
+    background-color: #4d5b61;
+    color: #e0e2e6;
+}
+
+.orders.active>a {
+    border-left-color: #1e282c !important;
+}
+
+//left sidebar
+
+form .form-buttons {
+    padding-top: 10px;
+}
+
 .dataTable-box {
     .box-title {
         margin-right: 10px;
     }
 }
+
 .dataTable {
     thead {
         tr {
@@ -21,20 +41,27 @@
                 width: 15px !important;
             }
             .row-actions {
-                width: 80px !important;
-                padding-right: 5px;
+                width: 115px !important;
+                padding-right: 0px;
             }
 
         }
-
     }
 
     tbody {
-        .js-edit-row {
-            margin-right: 10px;
+        tr {
+            td:nth-child(2) {
+                min-width:115px;
+                max-width: 115px;
+                a {
+                    display: inline-block;
+                    margin-right: 5px;
+                }
+
+            }
         }
     }
-    
+
 }
 
 .warehouses-page {
@@ -44,9 +71,10 @@
         border:2px dashed #777;
         color: #565656;
         border-radius: 3px;
-        height: 243px;
+        height: 257px;
+        margin-bottom: 15px;
         i {
-            padding: 15px 0;
+            padding: 35px 0;
             font-size: 85px;
         }
         div {
@@ -60,9 +88,11 @@
             border:2px dashed #5cb85c;
         }
     }
+
     .warehouse {
-        height: 243px;
+        height: 257px;
         box-shadow: 0 1px 1px rgba(0,0,0,0.1) !important;
+        margin-bottom: 28px;
         .icon {
             text-align: center;
             i {
@@ -77,57 +107,23 @@
     }
 }
 
-.employees-page {
-    .js-employee-create {
-        border:2px dashed #777;
-        color: #565656;
-        text-align: center;
-        height: 220px;
-        .icon i {
-            font-size: 85px;
-            padding: 15px 0;
-        }
-        .text {
-            font-size: 22px;
-            padding: 10px 0 15px;
-            text-transform: uppercase;
-        }
-        &:hover {
-            cursor: pointer;
-            color: #5cb85c;
-            border:2px dashed #5cb85c;
-        }
-    }
-    .employee {
-        height: 220px;
-        .icon i {
-            font-size: 70px;
-        }
-        .box-body {
-            min-height: 160px;
-            .info {
-                .name {
-                    font-size: 18px;
-                    span {
-                        color: #777;
-                        font-size: 16px;
-                        font-style: italic;
-                    }
-                    
-                }
-                .email {
-                    i {
-                        color: #8a8a8a;
-                    }
-                    font-size: 15px;
-                }
-            }
-        }
-    }
-}
 
 .orders-page {
     #orders-table {
+        thead {
+            .row-urgency {
+                width: 70px !important;
+            }
+            .row-created-at {
+                width: 105px !important;
+            }
+            .row-confirmation {
+                width: 35px !important;
+            }
+            .row-status {
+                width: 50px !important;
+            }
+        }
         tbody {
             tr.urgently {
                 background-color: #ffe2e2;
@@ -150,20 +146,22 @@
     overflow-y: auto;
 }
 
-.js-create-product {
-    margin-left: 10px;
-}
 
 .main-sidebar {
     .sidebar {
-        .add-new-company {
+        .add-new-company, .add-new-order {
             background-color: #3c8dbc;
+
             a {
                 color: white;
+                border-left: none;
+                text-transform: uppercase;
+                font-weight: bold;
             }
             &:hover>a {
                 background-color: #3c8dbc;
-                border-left-color:#255e80;
+                background-color: #367da7;
+                border-left: none;
             }
             
         }
@@ -181,6 +179,16 @@
         fieldset {
             border:1px solid #9e9e9e;
             padding: 10px 15px;
+            &.state {
+                .confirmations {
+                    margin-top: 10px;
+                }
+                label span {
+                    display: inline-block;
+                    padding-top: 10px;
+                    padding-left: 4px;
+                }
+            }
             .delete-button {
                 margin-top: 31px;
             }
