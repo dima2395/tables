@@ -138,6 +138,7 @@ class OrderProductsListForm(forms.ModelForm):
         qs = kwargs.pop('product_qs')
         super(OrderProductsListForm, self).__init__(*args, **kwargs)
         self.fields['product'].widget.attrs['style'] = "width:100%"
+        self.fields['quantity'].initial = ""
         self.fields['product'].queryset = qs
 
 
