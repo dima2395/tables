@@ -189,6 +189,7 @@
                     $('.dataTable').dataTable().fnClearTable();
                     table.ajax.reload();
                     render_delete_button();
+                    $('#select-all-rows').attr('checked', false);
                     
                     $('#modal-entities-delete').modal('hide');
                   }

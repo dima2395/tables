@@ -1,6 +1,7 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.tokens import default_token_generator
-from .forms import SignUpForm
+from .forms import SignUpForm, ProfileForm, ProfileAdditionalForm
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -8,7 +9,8 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.urls import reverse
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
 
 # Create your views here.
 def signup(request):
@@ -60,6 +62,43 @@ def activate(request, uid64, token):
             login(request, user)
             return redirect(reverse('tables:company-create'))
 
+
+
+@login_required
+def profile_edit(request, user_pk):
+    current_user = request.user
+    profile_owner = get_object_or_404(User, pk=user_pk)
+    form = ProfileForm(request.POST or None, instance=profile_owner)
+    profileAdditionalForm = ProfileAdditionalForm(request.POST or None, instance=profile_owner.profile)
+
+    if profile_owner.pk == current_user.pk:
+        if request.method == 'POST':
+            if form.is_valid() and profileAdditionalForm.is_valid():
+                form.save()
+                profileAdditionalForm.save()
+                messages.success(request, 'Изменения сохранены.')
+                return redirect(reverse('accounts:profile-edit',kwargs={'user_pk': profile_owner.pk}))
+        context = {
+            'form': form,
+            'profile_owner': profile_owner,
+            'profileAdditionalForm': profileAdditionalForm,
+        }
+        return render(request, 'tables/profile/profile.html', context)
+    else:
+        return redirect(reverse('accounts:profile-edit', kwargs={'user_pk': current_user.pk}))
+
+
+@login_required
+def password_change(request):
+    passwordChangeForm = PasswordChangeForm(request.user, request.POST or None)
+
+    if request.method == 'POST':
+        if passwordChangeForm.is_valid():
+            user = passwordChangeForm.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, 'Пароль изменён.')
+            return redirect(reverse('accounts:password-change'))
+    return render(request, 'tables/profile/password_change.html', {'passwordChangeForm': passwordChangeForm})
 
 
 
